@@ -1,0 +1,141 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode  
+		org.talend.core.model.process.ElementParameterParser
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+	    java.util.List
+		java.util.Map
+	"
+%>
+
+<%
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode) codeGenArgument.getArgument();
+	String cid = node.getUniqueName();
+	String outputDir = ElementParameterParser.getValue(node, "__OUTPUT_DIR__");
+	String outputFilename = ElementParameterParser.getValue(node, "__OUTPUT_FILENAME__");
+	String outputType = ElementParameterParser.getValue(node, "__OUTPUT_TYPE__");
+	String outputLocale = ElementParameterParser.getValue(node, "__OUTPUT_LOCALE__");
+	if (outputLocale == null || outputLocale.isEmpty()) {
+		outputLocale = "null";
+	}
+	String overwriteFiles = ElementParameterParser.getValue(node, "__OVERWRITE_FILES__");
+	String sequentialFilenames = ElementParameterParser.getValue(node, "__SEQUENTIAL_FILENAMES__");
+	String timestampPattern = ElementParameterParser.getValue(node, "__TIMESTAMP_PATTERN__");
+	String xlsIsDetectCellType = ElementParameterParser.getValue(node, "__XLS_IS_DETECT_CELL_TYPE__");
+	String xlsIsWhitePageBackground = ElementParameterParser.getValue(node, "__XLS_IS_WHITE_PAGE_BACKGROUND__");
+	String xlsRemoveEmptySpaceBetweenColumns = ElementParameterParser.getValue(node, "__XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS__");
+	String xlsRemoveEmptySpaceBetweenRows = ElementParameterParser.getValue(node, "__XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS__");
+	String xlsOnePagePerSheet = ElementParameterParser.getValue(node, "__XLS_IS_ONE_PAGE_PER_SHEET__");
+	String xlsTemplateWorkbookFile = ElementParameterParser.getValue(node, "__XLS_WORKBOOK_TEMPLATE__");
+	String xlsTemplateWorkbookKeepSheets = ElementParameterParser.getValue(node, "__XLS_WORKBOOK_TEMPLATE_KEEP_SHEETS__");
+	if (xlsTemplateWorkbookFile == null || xlsTemplateWorkbookFile.isEmpty()) {
+		xlsTemplateWorkbookFile = "null";
+		xlsTemplateWorkbookKeepSheets = "false";
+	}
+	String pdfCompressed = ElementParameterParser.getValue(node, "__PDF_IS_COMPRESSED__");
+	String pdfCreateBookmarks = ElementParameterParser.getValue(node, "__PDF_IS_CREATING_BATCH_MODE_BOOKMARKS__");
+	String pdfEncrypted = ElementParameterParser.getValue(node, "__PDF_IS_ENCRYPTED__");
+	String pdf128BitKey = ElementParameterParser.getValue(node, "__PDF_IS_128_BIT_KEY__");
+	String pdfPassword = ElementParameterParser.getValue(node, "__PDF_PASSWORD__");
+	String pdfAuthor = ElementParameterParser.getValue(node, "__PDF_AUTHOR__");
+	String pdfCreator = ElementParameterParser.getValue(node, "__PDF_CREATOR__");
+	String pdfTitle = ElementParameterParser.getValue(node, "__PDF_TITLE__");
+	String pdfSubject = ElementParameterParser.getValue(node, "__PDF_SUBJECT__");
+	String pdfKeywords = ElementParameterParser.getValue(node, "__PDF_KEYWORDS__");
+	String pdfVersion = ElementParameterParser.getValue(node, "__PDF_VERSION__");
+%>	
+	<%=cid%>.setOutputDir(<%=outputDir%>);
+	<%=cid%>.setOutputFileNameWithoutExt(<%=outputFilename%>);
+	<%=cid%>.setOutputFormat("<%=outputType%>");
+<%  if ("true".equals(overwriteFiles)) {%>
+		<%=cid%>.setOverwriteFiles(true);
+<%  } else {%>
+		<%=cid%>.setOverwriteFiles(false);
+<%  }%>
+<%  if ("true".equals(sequentialFilenames)) {%>
+		<%=cid%>.setFileTimestampPattern(<%=timestampPattern%>);
+<%  }%>
+	<%=cid%>.setOutputLocale(<%=outputLocale%>);
+<%  if ("XLS".equals(outputType) || "XLSX".equals(outputType)) { %>
+    // Excel options
+	<%=cid%>.setXlsDetectCellType(<%=xlsIsDetectCellType%>);
+	<%=cid%>.setXlsWhitePageBackground(<%=xlsIsWhitePageBackground%>);
+	<%=cid%>.setXlsRemoveEmptySpaceBetweenRows(<%=xlsRemoveEmptySpaceBetweenRows%>);
+	<%=cid%>.setXlsRemoveEmptySpaceBetweenColumns(<%=xlsRemoveEmptySpaceBetweenColumns%>);
+	<%=cid%>.setXlsOnePagePerSheet(<%=xlsOnePagePerSheet%>);
+	<%=cid%>.setXlsTemplateWorkbookFile(<%=xlsTemplateWorkbookFile%>);
+	<%=cid%>.setXlsKeepWorkbookTemplateSheets(<%=xlsTemplateWorkbookKeepSheets%>);
+<%  } else if ("PDF".equals(outputType)) { %>
+    // PDF options
+	<%=cid%>.setPdfCompressed(<%=pdfCompressed%>);
+	<%=cid%>.setPdfCreateBatchModeBookmarks(<%=pdfCreateBookmarks%>);
+	<%=cid%>.setPdfEncrypted(<%=pdfEncrypted%>);
+<%  	if ("true".equals(pdfEncrypted)) { %>
+	<%=cid%>.setPdfEncryptionKey128Bit(<%=pdf128BitKey%>);
+<%  		if (pdfPassword != null && pdfPassword.isEmpty() == false) { %>
+	<%=cid%>.setPdfUserPassword(<%=pdfPassword%>);
+<%  		} %>
+<%  	} %>
+<%  	if (pdfAuthor != null && pdfAuthor.isEmpty() == false) { %>
+	<%=cid%>.setPdfAuthor(<%=pdfAuthor%>);
+<%  	} %>
+<%  	if (pdfCreator != null && pdfCreator.isEmpty() == false) { %>
+	<%=cid%>.setPdfCreator(<%=pdfCreator%>);
+<%  	} %>
+<%		if (pdfTitle != null && pdfTitle.trim().isEmpty() == false) { %>
+	<%=cid%>.setPdfTitle(<%=pdfTitle%>);
+<%		} %>
+<%		if (pdfSubject != null && pdfSubject.trim().isEmpty() == false) { %>
+	<%=cid%>.setPdfSubject(<%=pdfSubject%>);
+<%		} %>
+<%		if (pdfKeywords != null && pdfKeywords.trim().isEmpty() == false) { %>
+	<%=cid%>.setPdfKeywords(<%=pdfKeywords%>);
+<%		} %>
+	<%=cid%>.setPdfVersion("<%=pdfVersion%>");	
+<%  } %>
+<%
+    @SuppressWarnings("unchecked")
+    List<Map<String, String>> paramDescList = (List<Map<String,String>>) ElementParameterParser.getObjectValue(node, "__REPORT_PARAMS__");
+    String collectionDelimiter = ElementParameterParser.getValue(node, "__COLLECTION_DELIMITER__");
+    String pattern = ElementParameterParser.getValue(node, "__CONVERSION_PATTERN__");
+    if (pattern == null || pattern.isEmpty()) {
+    	pattern = "null";
+    } %>
+  	// fill parameter if given  
+<%	for (Map<String, String> paramDesc : paramDescList) {
+		String conversionType = paramDesc.get("PARAM_TYPE");
+		String paramName = paramDesc.get("PARAM_NAME");
+		String paramValue = paramDesc.get("PARAM_VALUE");
+		if (paramValue == null || paramValue.isEmpty()) {
+			paramValue = "null";
+		}
+		String isCollection = paramDesc.get("PARAM_IS_COLLECTION");
+		if ("NoConversion".equals(conversionType)) {%>
+			<%=cid%>.setParameterValue(<%=paramName%>, <%=paramValue%>);			
+<%		} else {
+			if ("true".equals(isCollection)) {%>
+				<%=cid%>.setAndConvertParameterCollectionValues(<%=paramName%>, <%=paramValue%>, <%=collectionDelimiter%>, "<%=conversionType%>", <%=pattern%>);
+<%          } else {%>
+				<%=cid%>.setAndConvertParameterValue(<%=paramName%>, <%=paramValue%>, "<%=conversionType%>", <%=pattern%>);
+<%          }%>
+<%      }
+	}
+%>	
+    // fill report with data
+	globalMap.put("<%=cid%>_REPORT_QUERY", <%=cid%>.getQueryString());
+    try {
+		<%=cid%>.fillReport();
+		globalMap.put("<%=cid%>_NUMBER_OF_PAGES", <%=cid%>.getNumberReportPages());
+	} catch(Exception e) {
+	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
+		throw e;
+	}
+    // export report data
+    try {
+		<%=cid%>.exportReport();
+		globalMap.put("<%=cid%>_OUTPUT_FILE", <%=cid%>.getOutputFile());
+	} catch(Exception e) {
+	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
+		throw e;
+	}
