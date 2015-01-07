@@ -1,0 +1,49 @@
+<%@ jet
+	imports="
+		org.talend.core.model.process.INode
+		org.talend.core.model.process.ElementParameterParser
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+	"
+%>
+
+<%
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode) codeGenArgument.getArgument();
+	String cid = node.getUniqueName();
+	String dataSource = ElementParameterParser.getValue(node, "__DATASOURCE__");
+	String connection = ElementParameterParser.getValue(node, "__CONNECTION__");
+	String xmlFile = ElementParameterParser.getValue(node, "__XML_DS_FILE__");
+	boolean xmlUseSelectExprFromReport = "true".equals(ElementParameterParser.getValue(node, "__XML_USE_SELECT_EXPR_FROM_REPORT__"));
+	String xmlSelect = ElementParameterParser.getValue(node, "__XML_SELECT_EXPR__");
+	if (xmlSelect == null || xmlSelect.isEmpty() || xmlUseSelectExprFromReport) {
+		xmlSelect = "null";
+	}
+	String xmlDatePattern = ElementParameterParser.getValue(node, "__XML_DATE_PATTERN__");
+	if (xmlDatePattern == null || xmlDatePattern.isEmpty()) {
+		xmlDatePattern = "null";
+	}
+	String xmlNumberPattern = ElementParameterParser.getValue(node, "__XML_NUMBER_PATTERN__");
+	if (xmlNumberPattern == null || xmlNumberPattern.isEmpty()) {
+		xmlNumberPattern = "null";
+	}
+	String jrxmlFile = ElementParameterParser.getValue(node, "__JRXML_FILE__");
+	String useJavaCompiler = ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__");
+	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
+%>
+    de.cimt.talendcomp.jasperreportexec.JasperReportExecuter <%=cid%> = new de.cimt.talendcomp.jasperreportexec.JasperReportExecuter();
+    try {
+    	<%=cid%>.setJrxmlFile(<%=jrxmlFile%>);
+    	<%=cid%>.setFixLanguage(<%=useJavaCompiler%>);
+		<%=cid%>.compileReport();
+<%  if ("DB_CONNECTION".equals(dataSource)) { %>
+    	<%=cid%>.setConnection((java.sql.Connection) globalMap.get("conn_" + "<%=connection%>"));
+<%  } else if ("XML_FILE".equals(dataSource)) { %>
+		<%=cid%>.setXmlDataSource(<%=xmlFile%>, <%=xmlSelect%>, <%=xmlDatePattern%>, <%=xmlNumberPattern%>);
+<%  } else if ("DUMMY_DS".equals(dataSource)) { %>
+		<%=cid%>.setDummyDataSource(<%=numberDummyRecords%>);
+<%  } %>	
+    } catch (Exception e) {
+ 		globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage());
+   		throw e;    
+    }
+    
