@@ -1,6 +1,22 @@
+/**
+ * Copyright 2015 Jan Lolling jan.lolling@gmail.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.cimt.talendcomp.jasperreportexec;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -14,7 +30,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.xml.sax.InputSource;
+
 import net.sf.jasperreports.crosstabs.JRCrosstab;
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRAbstractExporter;
 import net.sf.jasperreports.engine.JRBreak;
 import net.sf.jasperreports.engine.JRChart;
@@ -58,6 +77,7 @@ import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRElementsVisitor;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
+import net.sf.jasperreports.engine.xml.JRXmlDigesterFactory;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 public class JasperReportExecuter {
@@ -230,7 +250,13 @@ public class JasperReportExecuter {
 			// Compile sub reports
 			JasperDesign jasperDesign = null;
 			try {
-				jasperDesign = JRXmlLoader.load(currentJrxmlFile);
+				JRXmlLoader loader = new JRXmlLoader(
+							DefaultJasperReportsContext.getInstance(), 
+							JRXmlDigesterFactory.createDigester(DefaultJasperReportsContext.getInstance()));
+				FileInputStream fis = new FileInputStream(currentJrxmlFile);
+				InputSource source = new InputSource(fis);
+				source.setEncoding("UTF-8");
+				jasperDesign = loader.loadXML(source);
 			} catch (Exception e) {
 				compileException = e;
 				return;
@@ -380,7 +406,7 @@ public class JasperReportExecuter {
 
 	private JRAbstractExporter createPdfExporter() {
 		setupOutputFile("pdf");
-		JRAbstractExporter exporter = new JRPdfExporter();
+		JRAbstractExporter<?, ?, ?, ?> exporter = new JRPdfExporter();
 		if (pdfCompressed != null) {
 			exporter.setParameter(
 					JRPdfExporterParameter.IS_COMPRESSED,
@@ -426,7 +452,7 @@ public class JasperReportExecuter {
 		if (pdfVersion != null) {
 			exporter.setParameter(
 					JRPdfExporterParameter.PDF_VERSION, 
-					pdfVersion.charAt(0));
+					pdfVersion);
 		}
 		return exporter;
 	}
