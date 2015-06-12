@@ -3,7 +3,7 @@
   <HEADER
     PLATEFORM="ALL"
     SERIAL=""
-    VERSION="1.20"
+    VERSION="1.16"
     STATUS="PROD"
     
     COMPATIBILITY="ALL"
@@ -327,7 +327,7 @@
 
   <CODEGENERATION>
 	<IMPORTS>
-      <IMPORT NAME="cimtJasperReportExec" MODULE="tJasperReportExec-1.15-jar-with-dependencies.jar" REQUIRED="true" />   
+      <IMPORT NAME="cimtJasperReportExec" MODULE="tJasperReportExec-1.16-jar-with-dependencies.jar" REQUIRED="true" />   
     </IMPORTS>
   </CODEGENERATION>
 
