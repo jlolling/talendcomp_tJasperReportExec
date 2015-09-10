@@ -44,6 +44,7 @@
 	String pdfSubject = ElementParameterParser.getValue(node, "__PDF_SUBJECT__");
 	String pdfKeywords = ElementParameterParser.getValue(node, "__PDF_KEYWORDS__");
 	String pdfVersion = ElementParameterParser.getValue(node, "__PDF_VERSION__");
+	boolean checkParameters = "true".equals(ElementParameterParser.getValue(node, "__CHECK_PARAMETERS__"));
 %>	
 	<%=cid%>.setOutputDir(<%=outputDir%>);
 	<%=cid%>.setOutputFileNameWithoutExt(<%=outputFilename%>);
@@ -121,18 +122,28 @@
 <%          }%>
 <%      }
 	}
-%>	
-    // fill report with data
+    boolean listParameters = "true".equals(ElementParameterParser.getValue(node, "__LIST_PARAMETERS__"));
+    if (checkParameters) { %>
+	// check parameters
+	try {
+		<%=cid%>.setPrintJRParameters(<%=listParameters%>);	
+		<%=cid%>.checkInputParameters();	
+	} catch(Exception e) {
+	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
+		throw e;
+	}
+<%  } %>
+   // fill report with data
 	globalMap.put("<%=cid%>_REPORT_QUERY", <%=cid%>.getQueryString());
-    try {
+   try {
 		<%=cid%>.fillReport();
 		globalMap.put("<%=cid%>_NUMBER_OF_PAGES", <%=cid%>.getNumberReportPages());
 	} catch(Exception e) {
 	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
 		throw e;
 	}
-    // export report data
-    try {
+   // export report data
+   try {
 		<%=cid%>.exportReport();
 		globalMap.put("<%=cid%>_OUTPUT_FILE", <%=cid%>.getOutputFile());
 	} catch(Exception e) {

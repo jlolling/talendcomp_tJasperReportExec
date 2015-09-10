@@ -2,39 +2,75 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.jasperreports.engine.util.JRStyledTextParser;
 import de.cimt.talendcomp.jasperreportexec.JasperReportExecuter;
 
 
 public class JasperReportExecuterTest {
+	
+	private static Map<String, Object> globalMap = new HashMap<String, Object>();
+	private static String currentComponent = null;
 
 	/**
 	 * @param args
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		test();
+		testXML();
 	}
 	
 	private static Connection createConnection() throws Exception {
 		Class.forName("org.postgresql.Driver");
+//		Connection conn = DriverManager.getConnection(
+//				"jdbc:postgresql://on-0337-jll:5432/foodmart", 
+//				"postgres", 
+//				"postgres");
 		Connection conn = DriverManager.getConnection(
-				"jdbc:postgresql://localhost:5432/foodmart", 
+				"jdbc:postgresql://on-0337-jll.local:5432/sugarcrm", 
 				"postgres", 
 				"postgres");
 		return conn;
 	}
 	
+	private static Connection createConnectionMobileGoogle() throws Exception {
+		Class.forName("com.mysql.jdbc.Driver");
+//		Connection conn = DriverManager.getConnection(
+//				"jdbc:postgresql://on-0337-jll:5432/foodmart", 
+//				"postgres", 
+//				"postgres");
+		Connection conn = DriverManager.getConnection(
+				"jdbc:mysql://on-0337-jll.local:3306/GOOGLE_ANALYTICS_DEV", 
+				"tisadmin", 
+				"tisadmin");
+		return conn;
+	}
+
 	public static void test() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		JasperReportExecuter exec = new JasperReportExecuter();
 		System.out.println("Configure executer");
 		exec.setFixLanguage(true);
-		exec.setOutputDir("/home/jlolling/test/jasper/");
+//		exec.setOutputDir("/var/testdata/jasper");
+		exec.setOutputDir("/var/testdata/jasper/output/");
 		exec.setFileTimestampPattern("yyyy-MM-dd_HHmmss");
-		exec.setOutputFileNameWithoutExt("test_excel_cell_type");
-		exec.setJrxmlFile("/home/jlolling/test/jasper/test_excel_cell_type.jrxml");
-		exec.setOutputFormat("xls");
+//		exec.setOutputFileNameWithoutExt("test_excel_cell_type");
+//		exec.setJrxmlFile("/var/testdata/jasper/test_excel_cell_type.jrxml");
+
+		exec.setOutputFileNameWithoutExt("shipping_report");
+		exec.setJrxmlFile("/var/testdata/jasper/shipping_report.jrxml");
+		exec.setParameterValue("Country", "USA");
+		exec.setParameterValue("RequestDate", sdf.parse("1996-08-14"));
+
+//		exec.setOutputFileNameWithoutExt("unsampled_reports");
+//		exec.setJrxmlFile("/Volumes/Data/projects/mobile/workspace_jasper/Mobile/reports/unsampled_reports_processing_per_month.jrxml");
+//		exec.setParameterValue("Country", "USA");
+//		exec.setParameterValue("RequestDate", sdf.parse("1996-08-14"));
+
+		exec.setOutputFormat("pdf");
 		exec.setXlsDetectCellType(true);
 		exec.setXlsIgnoreCellBackground(true);
 		exec.setXlsWhitePageBackground(false);
@@ -45,21 +81,23 @@ public class JasperReportExecuterTest {
 		exec.setPdfSubject("betreff");
 		exec.setPdfAuthor("Jan");
 		exec.setPdfTagged(true);
-		exec.setPdfVersion("6");
+		exec.setPdfVersion("7");
 		exec.setPdfCreateBatchModeBookmarks(true);
 		exec.setPdfCompressed(true);
-		exec.setPdfEncrypted(true);
-		exec.setPdfUserPassword("lolli");
-		System.out.println("Set connection executer");
+//		exec.setPdfEncrypted(true);
+//		exec.setPdfUserPassword("lolli");
+		System.out.println("Set connection");
 		exec.setConnection(createConnection());
 		System.out.println("Compile report");
 		exec.compileReport();
+		System.out.println("Check parameters");
+		exec.checkInputParameters();
 		System.out.println("Fill report");
 		exec.fillReport();
 		System.out.println("Export report");
 		exec.exportReport();
 		System.out.println("-----------------");
-		System.out.println("Parameters:");
+		System.out.println("Parameters and values:");
 		Map<String, Object> map = exec.getParameterMap();
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			System.out.println(entry.getKey() + "=" + entry.getValue());
@@ -88,5 +126,150 @@ public class JasperReportExecuterTest {
 		}
 		
 	}
+	
+	public static void talendJobTest() throws Exception {
+		
+		JRStyledTextParser.getInstance();
+		
+		de.cimt.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.cimt.talendcomp.jasperreportexec.JasperReportExecuter();
+		try {
+			tJasperReportExec_1
+					.setJrxmlFile("/var/testdata/jasper/shipping_report.jrxml");
+			tJasperReportExec_1.setFixLanguage(false);
+			System.out.println("compile...");
+			tJasperReportExec_1.compileReport();
+			tJasperReportExec_1
+					.setConnection(createConnection());
+		} catch (Exception e) {
+			throw e;
+		}
 
+		/**
+		 * [tJasperReportExec_1 begin ] stop
+		 */
+		/**
+		 * [tJasperReportExec_1 main ] start
+		 */
+
+
+		System.out.println("configure...");
+		tJasperReportExec_1
+				.setOutputDir("/var/testdata/jasper/output/");
+		tJasperReportExec_1
+				.setOutputFileNameWithoutExt("shipping_report");
+		tJasperReportExec_1.setOutputFormat("PDF");
+		tJasperReportExec_1.setOverwriteFiles(true);
+		tJasperReportExec_1.setFileTimestampPattern("yyyyMMdd_HHmmss");
+		tJasperReportExec_1.setOutputLocale(null);
+		// PDF options
+		tJasperReportExec_1.setPdfCompressed(false);
+		tJasperReportExec_1.setPdfCreateBatchModeBookmarks(false);
+		tJasperReportExec_1.setPdfEncrypted(false);
+		tJasperReportExec_1.setPdfAuthor("Jan Lolling");
+		tJasperReportExec_1.setPdfCreator("Jan Lolling @ cimt");
+		tJasperReportExec_1.setPdfTitle("Test Report");
+		tJasperReportExec_1.setPdfSubject("Test of component");
+		tJasperReportExec_1.setPdfKeywords("Talend, Test");
+		tJasperReportExec_1.setPdfVersion("6");
+		// fill parameter if given
+		tJasperReportExec_1.setParameterValue("Country", "USA");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		tJasperReportExec_1.setParameterValue("RequestDate",
+				sdf.parse("1996-08-14"));
+		System.out.println("-----------------");
+		System.out.println("Parameters and values:");
+		Map<String, Object> map = tJasperReportExec_1.getParameterMap();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			System.out.println(entry.getKey() + "=" + entry.getValue());
+		}
+		System.out.println("-----------------");
+		// fill report with data
+		try {
+			System.out.println("fill...");
+			tJasperReportExec_1.fillReport();
+		} catch (Exception e) {
+			throw e;
+		}
+		// export report data
+		try {
+			System.out.println("export...");
+			tJasperReportExec_1.exportReport();
+			System.out.println("Finished: " + tJasperReportExec_1.getOutputFile());
+			System.out.println("Pages: " + tJasperReportExec_1.getNumberReportPages());
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+	public static void testXML() throws Exception {
+		de.cimt.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.cimt.talendcomp.jasperreportexec.JasperReportExecuter();
+		try {
+			tJasperReportExec_1
+					.setJrxmlFile("/Volumes/Data/Jaspersoft/workspace_test/MyReports/xml_test_main.jrxml");
+			tJasperReportExec_1.setFixLanguage(false);
+			System.out.println("Compile...");
+			tJasperReportExec_1.compileReport();
+			System.out.println("Set Datasource...");
+			tJasperReportExec_1.setXmlDataSource(
+					"/Volumes/Data/Talend/testdata/xml/keyfigures.xml",
+					null, "dd.MM.yyyy", "###0.00;-###0.00");
+		} catch (Exception e) {
+			globalMap.put("tJasperReportExec_1_ERROR_MESSAGE",
+					e.getMessage());
+			throw e;
+		}
+
+		/**
+		 * [tJasperReportExec_1 begin ] stop
+		 */
+		/**
+		 * [tJasperReportExec_1 main ] start
+		 */
+
+		currentComponent = "tJasperReportExec_1";
+
+		tJasperReportExec_1
+				.setOutputDir("/Volumes/Data/Talend/testdata/xml/");
+		tJasperReportExec_1.setOutputFileNameWithoutExt("keyfigures");
+		tJasperReportExec_1.setOutputFormat("PDF");
+		tJasperReportExec_1.setOverwriteFiles(true);
+		tJasperReportExec_1.setFileTimestampPattern("yyyyMMdd_HHmmss");
+		tJasperReportExec_1.setOutputLocale("de");
+		// PDF options
+		tJasperReportExec_1.setPdfCompressed(false);
+		tJasperReportExec_1.setPdfCreateBatchModeBookmarks(false);
+		tJasperReportExec_1.setPdfEncrypted(false);
+		tJasperReportExec_1.setPdfVersion("4");
+		// fill parameter if given
+		// fill report with data
+		globalMap.put("tJasperReportExec_1_REPORT_QUERY",
+				tJasperReportExec_1.getQueryString());
+		tJasperReportExec_1.setPrintJRParameters(true);
+		tJasperReportExec_1.checkInputParameters();
+		try {
+			System.out.println("Fill...");
+			tJasperReportExec_1.fillReport();
+			globalMap.put("tJasperReportExec_1_NUMBER_OF_PAGES",
+					tJasperReportExec_1.getNumberReportPages());
+		} catch (Exception e) {
+			globalMap.put("tJasperReportExec_1_ERROR_MESSAGE",
+					e.getMessage());
+			throw e;
+		}
+		// export report data
+		try {
+			System.out.println("Export...");
+			tJasperReportExec_1.exportReport();
+			globalMap.put("tJasperReportExec_1_OUTPUT_FILE",
+					tJasperReportExec_1.getOutputFile());
+			System.out.println(tJasperReportExec_1.getOutputFile());
+		} catch (Exception e) {
+			globalMap.put("tJasperReportExec_1_ERROR_MESSAGE",
+					e.getMessage());
+			throw e;
+		}
+
+	}
+	
 }

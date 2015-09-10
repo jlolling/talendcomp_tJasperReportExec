@@ -26,11 +26,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import org.xml.sax.InputSource;
 
 import net.sf.jasperreports.crosstabs.JRCrosstab;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
@@ -42,11 +41,11 @@ import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRElementGroup;
 import net.sf.jasperreports.engine.JREllipse;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRFrame;
 import net.sf.jasperreports.engine.JRGenericElement;
 import net.sf.jasperreports.engine.JRImage;
 import net.sf.jasperreports.engine.JRLine;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRRectangle;
 import net.sf.jasperreports.engine.JRStaticText;
 import net.sf.jasperreports.engine.JRSubreport;
@@ -58,27 +57,55 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRTextExporter;
-import net.sf.jasperreports.engine.export.JRTextExporterParameter;
-import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRPptxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory;
 import net.sf.jasperreports.engine.util.JRElementsVisitor;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.xml.JRXmlDigesterFactory;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.export.AbstractXlsReportConfiguration;
+import net.sf.jasperreports.export.HtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleCsvExporterConfiguration;
+import net.sf.jasperreports.export.SimpleCsvReportConfiguration;
+import net.sf.jasperreports.export.SimpleDocxExporterConfiguration;
+import net.sf.jasperreports.export.SimpleDocxReportConfiguration;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterConfiguration;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
+import net.sf.jasperreports.export.SimpleOdsExporterConfiguration;
+import net.sf.jasperreports.export.SimpleOdsReportConfiguration;
+import net.sf.jasperreports.export.SimpleOdtExporterConfiguration;
+import net.sf.jasperreports.export.SimpleOdtReportConfiguration;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.export.SimplePdfReportConfiguration;
+import net.sf.jasperreports.export.SimplePptxExporterConfiguration;
+import net.sf.jasperreports.export.SimplePptxReportConfiguration;
+import net.sf.jasperreports.export.SimpleRtfExporterConfiguration;
+import net.sf.jasperreports.export.SimpleRtfReportConfiguration;
+import net.sf.jasperreports.export.SimpleTextExporterConfiguration;
+import net.sf.jasperreports.export.SimpleTextReportConfiguration;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import net.sf.jasperreports.export.WriterExporterOutput;
+import net.sf.jasperreports.export.type.PdfVersionEnum;
+
+import org.xml.sax.InputSource;
 
 public class JasperReportExecuter {
 
@@ -122,6 +149,8 @@ public class JasperReportExecuter {
 	private int numberReportPages = 0;
 	private boolean fixLanguage = false;
 	private String queryString = null;
+	private List<JRParameter> listJRParameters = null;
+	private boolean printJRParameters = false;
 
 	public String getOutputDir() {
 		return outputDir;
@@ -160,6 +189,94 @@ public class JasperReportExecuter {
 			mainJrxmlFile = new File(file);
 		} else {
 			throw new IllegalArgumentException("jrxml file is needed!");
+		}
+	}
+	
+	private void retrieveJRParameter() throws JRException {
+		if (mainJasperReport == null) {
+			mainJasperReport = (JasperReport) JRLoader.loadObjectFromFile(getJasperFileName(mainJrxmlFile.getAbsolutePath()));
+		}
+		listJRParameters = new ArrayList<JRParameter>();
+		JRParameter[] allReportParams = mainJasperReport.getParameters();
+		for (JRParameter rp : allReportParams) {
+			listJRParameters.add(rp);
+		}
+	}
+	
+	public void checkInputParameters() throws Exception {
+		retrieveJRParameter();
+		if (printJRParameters) {
+			System.out.println("List report parameters (except system parameters):");
+			boolean emptyList = true;
+			for (JRParameter rp : listJRParameters) {
+				if (rp.isSystemDefined() == false) {
+					System.out.println(rp.getName() + ": type=" + rp.getValueClassName() + (rp.getNestedTypeName() != null ? ", nested type=" + rp.getNestedTypeName() : ""));
+					emptyList = false;
+				}
+			}
+			if (emptyList) {
+				System.out.println("Report does not have any none-system parameters.");
+			}
+		}
+		// check for wrong input parameters
+		List<String> wrongInputParameters = new ArrayList<String>();
+		for (Map.Entry<String, Object> inputParamEntry : parameterMap.entrySet()) {
+			boolean wrongDataType = false;
+			boolean notFound = true;
+			JRParameter matchingReportParameter = null;
+			for (JRParameter rp : listJRParameters) {
+				// try to find the input parameters in the report
+				if (rp.getName().equals(inputParamEntry.getKey())) {
+					notFound = false;
+					matchingReportParameter = rp;
+					// check the data type
+					if (inputParamEntry.getValue() != null) {
+						if (rp.getValueClass().isAssignableFrom(inputParamEntry.getValue().getClass()) == false) {
+							wrongDataType = true;
+						}
+					}
+					break; // stop search for this input parameters
+				}
+			}
+			if (notFound) {
+				wrongInputParameters.add(inputParamEntry.getKey() + ": Not found in report (perhapse a typo?)");
+			} else if (wrongDataType) {
+				wrongInputParameters.add(inputParamEntry.getKey() + ": Input type:" + inputParamEntry.getValue().getClass() + " is not compatible to the report parameter type: " + matchingReportParameter.getValueClassName());
+			}
+		}
+		// check if we miss some parameters
+		List<String> missingInputParameters = new ArrayList<String>();
+		for (JRParameter rp : listJRParameters) {
+			if (rp.isForPrompting() && rp.isSystemDefined() == false) {
+				boolean notFound = true;
+				for (Map.Entry<String, Object> inputParamEntry : parameterMap.entrySet()) {
+					if (rp.getName().equals(inputParamEntry.getKey())) {
+						notFound = false;
+						break;
+					}
+				}
+				if (notFound) {
+					missingInputParameters.add(rp.getName() + ": Is missing. Type: " + rp.getValueClassName());
+				}
+			}
+		}
+		StringBuilder message = new StringBuilder();
+		if (wrongInputParameters.isEmpty() == false) {
+			message.append("Input parameters does not match to the report parameters:\n");
+			for (String s : wrongInputParameters) {
+				message.append(s);
+				message.append("\n");
+			}
+		}
+		if (missingInputParameters.isEmpty() == false) {
+			message.append("Missing input parameters:\n");
+			for (String s : missingInputParameters) {
+				message.append(s);
+				message.append("\n");
+			}
+		}
+		if (message.length() > 0) {
+			throw new Exception(message.toString());
 		}
 	}
 
@@ -231,6 +348,17 @@ public class JasperReportExecuter {
 	}
 
 	private Exception compileException = null;
+	
+	private JasperDesign retrieveJasperDesign(File jrxmlFile) throws Exception {
+		JRXmlLoader loader = new JRXmlLoader(
+					DefaultJasperReportsContext.getInstance(), 
+					JRXmlDigesterFactory.createDigester(DefaultJasperReportsContext.getInstance()));
+		FileInputStream fis = new FileInputStream(jrxmlFile);
+		InputSource source = new InputSource(fis);
+		source.setEncoding("UTF-8");
+		JasperDesign jasperDesign = loader.loadXML(source);
+		return jasperDesign;
+	}
 
 	private void compileReport(String jrxmlFilePath, boolean isMainReport) throws Exception {
 		File baseDir = new File(jrxmlFilePath).getParentFile();
@@ -250,26 +378,13 @@ public class JasperReportExecuter {
 			// Compile sub reports
 			JasperDesign jasperDesign = null;
 			try {
-				JRXmlLoader loader = new JRXmlLoader(
-							DefaultJasperReportsContext.getInstance(), 
-							JRXmlDigesterFactory.createDigester(DefaultJasperReportsContext.getInstance()));
-				FileInputStream fis = new FileInputStream(currentJrxmlFile);
-				InputSource source = new InputSource(fis);
-				source.setEncoding("UTF-8");
-				jasperDesign = loader.loadXML(source);
+				jasperDesign = retrieveJasperDesign(currentJrxmlFile);
 			} catch (Exception e) {
 				compileException = e;
 				return;
 			}
 			if (fixLanguage) {
-				jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA); // to be
-																		// sure
-																		// if
-																		// not
-																		// set
-																		// within
-																		// the
-																		// report
+				jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA);
 			}
 			try {
 				jasperReport = JasperCompileManager.compileReport(jasperDesign);
@@ -369,149 +484,243 @@ public class JasperReportExecuter {
 	 */
 	public void fillReport() throws Exception {
 		if (mainJasperReport == null) {
-			// .jasper file exists already
-			if (dbConnection != null) {
-				if (dbConnection.isClosed()) {
-					throw new Exception("Connection is closed!");
-				}
-				jasperPrint = JasperFillManager.fillReport(
-						getJasperFileName(mainJrxmlFile.getAbsolutePath()),
-						parameterMap, dbConnection);
-			} else if (jrDataSource != null) {
-				jasperPrint = JasperFillManager.fillReport(
-						getJasperFileName(mainJrxmlFile.getAbsolutePath()),
-						parameterMap, jrDataSource);
-			} else {
-				throw new Exception("No Connection or JRDataSource available to fill the report");
+			mainJasperReport = (JasperReport)JRLoader.loadObjectFromFile(getJasperFileName(mainJrxmlFile.getAbsolutePath()));
+		}
+		// report compiled
+		if (dbConnection != null) {
+			if (dbConnection.isClosed()) {
+				throw new Exception("Connection is closed!");
 			}
+			jasperPrint = JasperFillManager.fillReport(mainJasperReport,
+					parameterMap, dbConnection);
+		} else if (jrDataSource != null) {
+			jasperPrint = JasperFillManager.fillReport(mainJasperReport,
+					parameterMap, jrDataSource);
 		} else {
-			// report compiled
-			if (dbConnection != null) {
-				if (dbConnection.isClosed()) {
-					throw new Exception("Connection is closed!");
-				}
-				jasperPrint = JasperFillManager.fillReport(mainJasperReport,
-						parameterMap, dbConnection);
-			} else if (jrDataSource != null) {
-				jasperPrint = JasperFillManager.fillReport(mainJasperReport,
-						parameterMap, jrDataSource);
-			} else {
-				throw new Exception("No Connection or JRDataSource available to fill the report");
-			}
+			throw new Exception("No Connection or JRDataSource available to fill the report");
 		}
 		if (jasperPrint != null) {
 			numberReportPages = jasperPrint.getPages().size();
 		}
 	}
 
-	private JRAbstractExporter createPdfExporter() {
+	private void setupSpreadsheetConfiguration(AbstractXlsReportConfiguration reportConfiguration) {
+		if (xlsDetectCellType != null) {
+			reportConfiguration.setDetectCellType(xlsDetectCellType);
+		}
+		if (xlsIgnoreCellBackground != null) {
+			reportConfiguration.setIgnoreCellBackground(xlsIgnoreCellBackground);
+		}
+		if (xlsOnePagePerSheet != null) {
+			reportConfiguration.setOnePagePerSheet(xlsOnePagePerSheet);
+		}
+		if (xlsRemoveEmptySpaceBetweenColumns != null) {
+			reportConfiguration.setRemoveEmptySpaceBetweenColumns(xlsRemoveEmptySpaceBetweenColumns);
+		}
+		if (xlsRemoveEmptySpaceBetweenRows != null) {
+			reportConfiguration.setRemoveEmptySpaceBetweenRows(xlsRemoveEmptySpaceBetweenRows);
+		}
+		if (xlsWhitePageBackground != null) {
+			reportConfiguration.setWhitePageBackground(xlsWhitePageBackground);
+		}
+	}
+	
+	private JRAbstractExporter<?, ?, ?, ?> createPdfExporter() {
 		setupOutputFile("pdf");
-		JRAbstractExporter<?, ?, ?, ?> exporter = new JRPdfExporter();
+		JRPdfExporter exporter = new JRPdfExporter();
+		SimplePdfExporterConfiguration exportConfiguration = new SimplePdfExporterConfiguration();
 		if (pdfCompressed != null) {
-			exporter.setParameter(
-					JRPdfExporterParameter.IS_COMPRESSED,
-					pdfCompressed);
+			exportConfiguration.setCompressed(pdfCompressed);
 		}
 		if (pdfCreateBatchModeBookmarks != null) {
-			exporter.setParameter(
-					JRPdfExporterParameter.IS_CREATING_BATCH_MODE_BOOKMARKS,
-					pdfCreateBatchModeBookmarks);
+			exportConfiguration.setCreatingBatchModeBookmarks(pdfCreateBatchModeBookmarks);
 		}
 		if (pdfOwnerPassword != null) {
-			exporter.setParameter(JRPdfExporterParameter.OWNER_PASSWORD, pdfOwnerPassword);
+			exportConfiguration.setOwnerPassword(pdfOwnerPassword);
 		}
 		if (pdfUserPassword != null) {
-			exporter.setParameter(JRPdfExporterParameter.USER_PASSWORD, pdfUserPassword);
+			exportConfiguration.setUserPassword(pdfUserPassword);
 		}
 		if (pdfEncrypted != null) {
-			exporter.setParameter(JRPdfExporterParameter.IS_ENCRYPTED, pdfEncrypted);
+			exportConfiguration.setEncrypted(pdfEncrypted);
 			if (pdfEncryptionKey128Bit != null) {
-				exporter.setParameter(JRPdfExporterParameter.IS_128_BIT_KEY, pdfEncryptionKey128Bit);
+				exportConfiguration.set128BitKey(pdfEncryptionKey128Bit);
 			}
 		}
 		if (pdfTagged != null) {
-			exporter.setParameter(JRPdfExporterParameter.IS_TAGGED, pdfTagged);
+			exportConfiguration.setTagged(pdfTagged);
 		} else {
-			exporter.setParameter(JRPdfExporterParameter.IS_TAGGED, false);
+			exportConfiguration.setTagged(false);
 		}
 		if (pdfAuthor != null) {
-			exporter.setParameter(JRPdfExporterParameter.METADATA_AUTHOR, pdfAuthor);
+			exportConfiguration.setMetadataAuthor(pdfAuthor);
 		}
 		if (pdfCreator != null) {
-			exporter.setParameter(JRPdfExporterParameter.METADATA_CREATOR, pdfCreator);
+			exportConfiguration.setMetadataCreator(pdfCreator);
 		}
 		if (pdfKeywords != null) {
-			exporter.setParameter(JRPdfExporterParameter.METADATA_KEYWORDS,	pdfKeywords);
+			exportConfiguration.setMetadataKeywords(pdfKeywords);
 		}
 		if (pdfTitle != null) {
-			exporter.setParameter(JRPdfExporterParameter.METADATA_TITLE, pdfTitle);
+			exportConfiguration.setMetadataTitle(pdfTitle);
 		}
 		if (pdfSubject != null) {
-			exporter.setParameter(JRPdfExporterParameter.METADATA_SUBJECT, pdfSubject);
+			exportConfiguration.setMetadataSubject(pdfSubject);
 		}
 		if (pdfVersion != null) {
-			exporter.setParameter(
-					JRPdfExporterParameter.PDF_VERSION, 
-					pdfVersion);
+			exportConfiguration.setPdfVersion(PdfVersionEnum.getByName(pdfVersion));
 		}
+		exporter.setConfiguration(exportConfiguration);
+		// report configuration
+		SimplePdfReportConfiguration reportConfiguration = new SimplePdfReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		// output configuration
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
 		return exporter;
 	}
 
-	private void setupXlsExporter(JRAbstractExporter exporter) {
-		if (xlsDetectCellType != null) {
-			exporter.setParameter(
-					JRXlsAbstractExporterParameter.IS_DETECT_CELL_TYPE,
-					xlsDetectCellType);
-		}
-		if (xlsIgnoreCellBackground != null) {
-			exporter.setParameter(
-					JRXlsAbstractExporterParameter.IS_IGNORE_CELL_BACKGROUND,
-					xlsIgnoreCellBackground);
-		}
-		if (xlsOnePagePerSheet != null) {
-			exporter.setParameter(
-					JRXlsAbstractExporterParameter.IS_ONE_PAGE_PER_SHEET,
-					xlsOnePagePerSheet);
-		}
-		if (xlsRemoveEmptySpaceBetweenColumns != null) {
-			exporter.setParameter(
-					JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS,
-					xlsRemoveEmptySpaceBetweenColumns);
-		}
-		if (xlsRemoveEmptySpaceBetweenRows != null) {
-			exporter.setParameter(
-					JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
-					xlsRemoveEmptySpaceBetweenRows);
-		}
-		if (xlsWhitePageBackground != null) {
-			exporter.setParameter(
-					JRXlsAbstractExporterParameter.IS_WHITE_PAGE_BACKGROUND,
-					xlsWhitePageBackground);
-		}
-	}
-
-	private JRAbstractExporter createXlsExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createXlsExporter() {
 		setupOutputFile("xls");
 		JRXlsExporter exporter = new JRXlsExporter();
-		setupXlsExporter(exporter);
+		SimpleXlsExporterConfiguration exportConfiguration = new SimpleXlsExporterConfiguration();
 		if (xlsTemplateWorkbookFile != null) {
-			exporter.setWorkbookTemplate(xlsTemplateWorkbookFile);
-			exporter.setWorkbookTemplateKeepSheets(xlsKeepWorkbookTemplateSheets);
+			exportConfiguration.setWorkbookTemplate(xlsTemplateWorkbookFile);
+			exportConfiguration.setKeepWorkbookTemplateSheets(xlsKeepWorkbookTemplateSheets);
 		}
+		exporter.setConfiguration(exportConfiguration);
+		SimpleXlsReportConfiguration reportConfiguration = new SimpleXlsReportConfiguration();
+		setupSpreadsheetConfiguration(reportConfiguration);
+		exporter.setConfiguration(reportConfiguration);
+		// output configuration
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
 		return exporter;
 	}
 
-	private JRAbstractExporter createXlsxExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createXlsxExporter() {
 		setupOutputFile("xlsx");
 		JRXlsxExporter exporter = new JRXlsxExporter();
-		setupXlsExporter(exporter);
+		SimpleXlsxExporterConfiguration exportConfiguration = new SimpleXlsxExporterConfiguration();
 		if (xlsTemplateWorkbookFile != null) {
-			exporter.setWorkbookTemplate(xlsTemplateWorkbookFile);
-			exporter.setWorkbookTemplateKeepSheets(xlsKeepWorkbookTemplateSheets);
+			exportConfiguration.setWorkbookTemplate(xlsTemplateWorkbookFile);
+			exportConfiguration.setKeepWorkbookTemplateSheets(xlsKeepWorkbookTemplateSheets);
 		}
+		exporter.setConfiguration(exportConfiguration);
+		SimpleXlsxReportConfiguration reportConfiguration = new SimpleXlsxReportConfiguration();
+		setupSpreadsheetConfiguration(reportConfiguration);
+		exporter.setConfiguration(reportConfiguration);
+		// output configuration
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+	
+	private JRAbstractExporter<?, ?, ?, ?> createHtmlExporter() {
+		setupOutputFile("html");
+		HtmlExporter exporter = new HtmlExporter();
+		SimpleHtmlExporterConfiguration exportConfiguration = new SimpleHtmlExporterConfiguration();
+		exporter.setConfiguration(exportConfiguration);
+		SimpleHtmlReportConfiguration reportConfiguration = new SimpleHtmlReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		HtmlExporterOutput exporterOutput = new SimpleHtmlExporterOutput(outputFile, "UTF-8");
+		exporter.setExporterOutput(exporterOutput);
 		return exporter;
 	}
 
+	private JRAbstractExporter<?, ?, ?, ?> createCsvExporter() {
+		setupOutputFile("csv");
+		JRCsvExporter exporter = new JRCsvExporter();
+		SimpleCsvExporterConfiguration exportConfiguration = new SimpleCsvExporterConfiguration();
+		exportConfiguration.setFieldDelimiter("|");
+		exportConfiguration.setRecordDelimiter("\n");
+		exporter.setConfiguration(exportConfiguration);
+		SimpleCsvReportConfiguration reportConfiguration = new SimpleCsvReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(outputFile, "UTF-8");
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+
+	private JRAbstractExporter<?, ?, ?, ?> createTxtExporter() {
+		setupOutputFile("txt");
+		JRTextExporter exporter = new JRTextExporter();
+		SimpleTextExporterConfiguration exportConfiguration = new SimpleTextExporterConfiguration();
+		exportConfiguration.setLineSeparator("\n");
+		exportConfiguration.setPageSeparator("\n\n");
+		exporter.setConfiguration(exportConfiguration);
+		SimpleTextReportConfiguration reportConfiguration = new SimpleTextReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(outputFile, "UTF-8");
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+	
+	private JRAbstractExporter<?, ?, ?, ?> createPptxExporter() {
+		setupOutputFile("pptx");
+		JRPptxExporter exporter = new JRPptxExporter();
+		SimplePptxExporterConfiguration exportConfiguration = new SimplePptxExporterConfiguration();
+		exporter.setConfiguration(exportConfiguration);
+		SimplePptxReportConfiguration reportConfiguration = new SimplePptxReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+	
+	private JRAbstractExporter<?, ?, ?, ?> createOdsExporter() {
+		setupOutputFile("ods");
+		JROdsExporter exporter = new JROdsExporter();
+		SimpleOdsExporterConfiguration exportConfiguration = new SimpleOdsExporterConfiguration();
+		if (xlsTemplateWorkbookFile != null) {
+			exportConfiguration.setWorkbookTemplate(xlsTemplateWorkbookFile);
+			exportConfiguration.setKeepWorkbookTemplateSheets(xlsKeepWorkbookTemplateSheets);
+		}
+		exporter.setConfiguration(exportConfiguration);
+		SimpleOdsReportConfiguration reportConfiguration = new SimpleOdsReportConfiguration();
+		setupSpreadsheetConfiguration(reportConfiguration);
+		exporter.setConfiguration(reportConfiguration);
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+	
+	private JRAbstractExporter<?, ?, ?, ?> createOdtExporter() {
+		setupOutputFile("odt");
+		JROdtExporter exporter = new JROdtExporter();
+		SimpleOdtExporterConfiguration exportConfiguration = new SimpleOdtExporterConfiguration();
+		exporter.setConfiguration(exportConfiguration);
+		SimpleOdtReportConfiguration reportConfiguration = new SimpleOdtReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+
+	private JRAbstractExporter<?, ?, ?, ?> createRtfExporter() {
+		setupOutputFile("rtf");
+		JRRtfExporter exporter = new JRRtfExporter();
+		SimpleRtfExporterConfiguration exportConfiguration = new SimpleRtfExporterConfiguration();
+		exporter.setConfiguration(exportConfiguration);
+		SimpleRtfReportConfiguration reportConfiguration = new SimpleRtfReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		WriterExporterOutput exporterOutput = new SimpleWriterExporterOutput(outputFile, "UTF-8");
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+
+	private JRAbstractExporter<?, ?, ?, ?> createDocxExporter() {
+		setupOutputFile("docx");
+		JRDocxExporter exporter = new JRDocxExporter();
+		SimpleDocxExporterConfiguration exportConfiguration = new SimpleDocxExporterConfiguration();
+		exporter.setConfiguration(exportConfiguration);
+		SimpleDocxReportConfiguration reportConfiguration = new SimpleDocxReportConfiguration();
+		exporter.setConfiguration(reportConfiguration);
+		SimpleOutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(outputFile);
+		exporter.setExporterOutput(exporterOutput);
+		return exporter;
+	}
+	
 	/**
 	 * creates the output formats add the appropriated file extension to the
 	 * file
@@ -522,7 +731,7 @@ public class JasperReportExecuter {
 		if (outputFileNameWithoutExt == null) {
 			throw new Exception("Option outputFileWithoutExt not set");
 		}
-		JRAbstractExporter exporter;
+		JRAbstractExporter<?, ?, ?, ?> exporter;
 		if ("PDF".equalsIgnoreCase(outputFormat)) {
 			exporter = createPdfExporter();
 		} else if ("XLS".equalsIgnoreCase(outputFormat)) {
@@ -530,34 +739,21 @@ public class JasperReportExecuter {
 		} else if ("XLSX".equalsIgnoreCase(outputFormat)) {
 			exporter = createXlsxExporter();
 		} else if ("PPTX".equalsIgnoreCase(outputFormat)) {
-			exporter = new JRPptxExporter();
-			setupOutputFile("pptx");
+			exporter = createPptxExporter();
 		} else if ("ODS".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("ods");
-			exporter = new JROdsExporter();
+			exporter = createOdsExporter();
 		} else if ("RTF".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("rtf");
-			exporter = new JRRtfExporter();
+			exporter = createRtfExporter();
 		} else if ("HTML".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("html");
-			exporter = new JRHtmlExporter();
-			exporter.setParameter(JRHtmlExporterParameter.CHARACTER_ENCODING, "UTF-8");
+			exporter = createHtmlExporter();
 		} else if ("CSV".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("csv");
-			exporter = new JRCsvExporter();
-			exporter.setParameter(JRCsvExporterParameter.FIELD_DELIMITER, "|");
-			exporter.setParameter(JRCsvExporterParameter.RECORD_DELIMITER, "\n");
-			exporter.setParameter(JRCsvExporterParameter.CHARACTER_ENCODING, "UTF-8");
+			exporter = createCsvExporter();
 		} else if ("TXT".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("txt");
-			exporter = new JRTextExporter();
-			exporter.setParameter(JRTextExporterParameter.CHARACTER_ENCODING, "UTF-8");
+			exporter = createTxtExporter();
 		} else if ("DOCX".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("docx");
-			exporter = new JRDocxExporter();
+			exporter = createDocxExporter();
 		} else if ("ODT".equalsIgnoreCase(outputFormat)) {
-			setupOutputFile("odt");
-			exporter = new JROdtExporter();
+			exporter = createOdtExporter();
 		} else {
 			throw new Exception(
 					"exportReport failed: Unknown output file format:"
@@ -570,11 +766,10 @@ public class JasperReportExecuter {
 		if (createDirIfNecessary) {
 			Util.ensureParentExists(new File(outputFile));
 		}
-		exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, outputFile);
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+		exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 		exporter.exportReport();
 	}
-
+	
 	/**
 	 * set a report parameter value
 	 * 
@@ -840,6 +1035,8 @@ public class JasperReportExecuter {
 		if (numberPattern != null && numberPattern.isEmpty() == false) {
 			xmlDs.setNumberPattern(numberPattern);
 		}
+		parameterMap.put(JRXPathQueryExecuterFactory.XML_FILE, file);
+		parameterMap.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, new DocumentProxy(file));
 		jrDataSource = xmlDs;
 	}
 
@@ -862,6 +1059,14 @@ public class JasperReportExecuter {
 
 	public String getQueryString() {
 		return queryString;
+	}
+
+	public boolean isPrintJRParameters() {
+		return printJRParameters;
+	}
+
+	public void setPrintJRParameters(boolean printJRParameters) {
+		this.printJRParameters = printJRParameters;
 	}
 
 }
