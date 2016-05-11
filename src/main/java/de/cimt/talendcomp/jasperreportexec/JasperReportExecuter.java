@@ -1069,4 +1069,8 @@ public class JasperReportExecuter {
 		this.printJRParameters = printJRParameters;
 	}
 
+	public void setReportProperty(String propName, String value) {
+		mainJasperReport.setProperty(propName, value);
+	}
+	
 }

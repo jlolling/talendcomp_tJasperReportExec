@@ -20,6 +20,7 @@
 		outputLocale = "null";
 	}
 	String overwriteFiles = ElementParameterParser.getValue(node, "__OVERWRITE_FILES__");
+	boolean createDirs = "true".equals(ElementParameterParser.getValue(node, "__CREATE_DIRS__"));
 	String sequentialFilenames = ElementParameterParser.getValue(node, "__SEQUENTIAL_FILENAMES__");
 	String timestampPattern = ElementParameterParser.getValue(node, "__TIMESTAMP_PATTERN__");
 	String xlsIsDetectCellType = ElementParameterParser.getValue(node, "__XLS_IS_DETECT_CELL_TYPE__");
@@ -46,7 +47,19 @@
 	String pdfVersion = ElementParameterParser.getValue(node, "__PDF_VERSION__");
 	boolean checkParameters = "true".equals(ElementParameterParser.getValue(node, "__CHECK_PARAMETERS__"));
 %>	
-	<%=cid%>.setOutputDir(<%=outputDir%>);
+	{
+		String dir = <%=outputDir%>;
+<%  if (createDirs) { %>
+		java.io.File dirf = new java.io.File(dir);
+		if (dirf.exists() == false) {
+			 dirf.mkdirs(); // create the whole path
+		}
+		if (dirf.exists() == false) {
+			 throw new Exception("Output dir: " + dir + " does not exists and cannot be created.");
+		}
+<%  } %>
+		<%=cid%>.setOutputDir(dir);
+	}
 	<%=cid%>.setOutputFileNameWithoutExt(<%=outputFilename%>);
 	<%=cid%>.setOutputFormat("<%=outputType%>");
 <%  if ("true".equals(overwriteFiles)) {%>

@@ -27,24 +27,9 @@
 			<version>2.4.4</version>
 		</dependency>
 		<dependency>
-			<groupId>com.lowagie</groupId>
-			<artifactId>itext</artifactId>
-			<version>4.2.1</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>bcmail-jdk14</artifactId>
-					<groupId>org.bouncycastle</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.12</version>
+			<version>3.14</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>stax-api</artifactId>
@@ -56,11 +41,56 @@
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
 			<version>2.7.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>itext</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7.js3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/itext-2.1.7.js3.jar</systemPath>
+		</dependency>
+		<dependency>
+		    <groupId>org.swinglabs</groupId>
+		    <artifactId>pdf-renderer</artifactId>
+		    <version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>1.46</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bctsp-jdk16</artifactId>
+			<version>1.46</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>bcmail-jdk16</artifactId>
+					<groupId>org.bouncycastle</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.1.1</version>
+			<version>6.2.1</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>stax-api</artifactId>
@@ -142,7 +172,28 @@
 					<artifactId>javax.inject</artifactId>
 					<groupId>javax.inject</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>itext</artifactId>
+					<groupId>com.lowagie</groupId>
+				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>6.1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jasperreports-functions-6.1.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>3.2.4.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>3.2.4.RELEASE</version>
 		</dependency>
 	</dependencies>
 	<organization>
@@ -170,7 +221,7 @@
 							<goal>jar</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>distrib</outputDirectory>
+							<outputDirectory>talend_component/tJasperReportExec</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
@@ -189,7 +240,7 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>distrib</outputDirectory>
+							<outputDirectory>${project.basedir}/talend_component/tJasperReportExec</outputDirectory>
 							<overWriteReleases>true</overWriteReleases>
 							<overWriteSnapshots>true</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
@@ -199,5 +250,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>2.1</version>
+	<version>2.2</version>
 </project>
