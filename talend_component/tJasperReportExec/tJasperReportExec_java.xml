@@ -1,386 +1,235 @@
-<COMPONENT>
+<?xml version="1.0" encoding="UTF-8"?>
 
-  <HEADER
-    PLATEFORM="ALL"
-    SERIAL=""
-    VERSION="2.3"
-    STATUS="PROD"
-    
-    COMPATIBILITY="ALL"
-    AUTHOR="Jan Lolling"
-    RELEASE_DATE="20160220A"
-    STARTABLE="true"
-  >
-    <SIGNATURE />
-  </HEADER>
-
-  <FAMILIES>
-    <FAMILY>Business_Intelligence/Jasper</FAMILY>
-  </FAMILIES>
-
-  <DOCUMENTATION>
-    <URL />
-  </DOCUMENTATION>
-
-  <CONNECTORS>
-    <CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="0" MAX_INPUT="1" />
-    <CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" MAX_OUTPUT="1"/>
-    <CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" MAX_OUTPUT="1"/>
-    <CONNECTOR CTYPE="COMPONENT_OK" />
-    <CONNECTOR CTYPE="COMPONENT_ERROR" />
-    <CONNECTOR CTYPE="RUN_IF" />
-  </CONNECTORS>
-
-  <PARAMETERS>
-
-	<PARAMETER NAME="DATASOURCE" FIELD="CLOSED_LIST" NUM_ROW="1" REQUIRED="true">
-    	<ITEMS DEFAULT="DB_CONNECTION">
-    		<ITEM NAME="DB_CONNECTION" VALUE="DB_CONNECTION" />
-    		<ITEM NAME="XML_FILE" VALUE="XML_FILE" />
-    		<ITEM NAME="DUMMY_DS" VALUE="DUMMY_DS" />
-    	</ITEMS>
+<COMPONENT> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="2.2" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20170126" STARTABLE="true"> 
+    <SIGNATURE/> 
+  </HEADER>  
+  <FAMILIES> 
+    <FAMILY>Business_Intelligence/Jasper</FAMILY> 
+  </FAMILIES>  
+  <DOCUMENTATION> 
+    <URL/> 
+  </DOCUMENTATION>  
+  <CONNECTORS> 
+    <CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="0" MAX_INPUT="1"/>  
+    <CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" MAX_OUTPUT="1"/>  
+    <CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" MAX_OUTPUT="1"/>  
+    <CONNECTOR CTYPE="COMPONENT_OK"/>  
+    <CONNECTOR CTYPE="COMPONENT_ERROR"/>  
+    <CONNECTOR CTYPE="RUN_IF"/> 
+  </CONNECTORS>  
+  <PARAMETERS> 
+    <PARAMETER NAME="DATASOURCE" FIELD="CLOSED_LIST" NUM_ROW="1" REQUIRED="true"> 
+      <ITEMS DEFAULT="DB_CONNECTION"> 
+        <ITEM NAME="DB_CONNECTION" VALUE="DB_CONNECTION"/>  
+        <ITEM NAME="XML_FILE" VALUE="XML_FILE"/>  
+        <ITEM NAME="DUMMY_DS" VALUE="DUMMY_DS"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="CONNECTION" FIELD="COMPONENT_LIST" FILTER="REGEXP:^(.)*(Connection)(.)*" NUM_ROW="2" DYNAMIC_SETTINGS="true" SHOW_IF="DATASOURCE == 'DB_CONNECTION'"/>  
+    <PARAMETER NAME="XML_DS_FILE" FIELD="FILE" NUM_ROW="2" REQUIRED="true" SHOW_IF="DATASOURCE == 'XML_FILE'"> 
+      <DEFAULT>"/path/to/xmlfile"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_USE_SELECT_EXPR_FROM_REPORT" FIELD="CHECK" NUM_ROW="3" SHOW_IF="DATASOURCE == 'XML_FILE'"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_SELECT_EXPR" FIELD="TEXT" NUM_ROW="3" SHOW_IF="(DATASOURCE == 'XML_FILE') and (XML_USE_SELECT_EXPR_FROM_REPORT == 'false')"> 
+      <DEFAULT>"."</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_DATE_PATTERN" FIELD="TEXT" NUM_ROW="4" SHOW_IF="DATASOURCE == 'XML_FILE'"> 
+      <DEFAULT>"dd.MM.yyyy"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_NUMBER_PATTERN" FIELD="TEXT" NUM_ROW="4" SHOW_IF="DATASOURCE == 'XML_FILE'"> 
+      <DEFAULT>"###0.00;-###0.00"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="DUMMY_DS_NUMBER_RECORDS" FIELD="TEXT" NUM_ROW="2" SHOW_IF="DATASOURCE == 'DUMMY_DS'" REQUIRED="true"> 
+      <DEFAULT>1</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="JRXML_FILE" FIELD="FILE" NUM_ROW="10" REQUIRED="true"> 
+      <DEFAULT>""</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_TYPE" FIELD="CLOSED_LIST" NUM_ROW="20" REQUIRED="true"> 
+      <ITEMS DEFAULT="PDF"> 
+        <ITEM NAME="CSV" VALUE="CSV"/>  
+        <ITEM NAME="DOCX" VALUE="DOCX"/>  
+        <ITEM NAME="HTML" VALUE="HTML"/>  
+        <ITEM NAME="ODT" VALUE="ODT"/>  
+        <ITEM NAME="ODS" VALUE="ODS"/>  
+        <ITEM NAME="PDF" VALUE="PDF"/>  
+        <ITEM NAME="RTF" VALUE="RTF"/>  
+        <ITEM NAME="TEXT" VALUE="TXT"/>  
+        <ITEM NAME="XLS" VALUE="XLS"/>  
+        <ITEM NAME="XLSX" VALUE="XLSX"/>  
+        <ITEM NAME="PPTX" VALUE="PPTX"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_LOCALE" FIELD="TEXT" NUM_ROW="30"> 
+      <DEFAULT>"de"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_DIR" FIELD="TEXT" NUM_ROW="40" REQUIRED="true"> 
+      <DEFAULT>""</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_FILENAME" FIELD="TEXT" NUM_ROW="50" REQUIRED="true"> 
+      <DEFAULT>"report_out"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OVERWRITE_FILES" FIELD="CHECK" NUM_ROW="60"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CREATE_DIRS" FIELD="CHECK" NUM_ROW="60"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="SEQUENTIAL_FILENAMES" FIELD="CHECK" NUM_ROW="70"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="TIMESTAMP_PATTERN" FIELD="TEXT" NUM_ROW="70" REQUIRED="true" SHOW_IF="SEQUENTIAL_FILENAMES == 'true'"> 
+      <DEFAULT>"yyyyMMdd_HHmmss"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="REPORT_PARAMS" FIELD="TABLE" NUM_ROW="80" NB_LINES="5"> 
+      <ITEMS> 
+        <ITEM NAME="PARAM_NAME" FIELD="String" VALUE="&quot;parameterName&quot;"/>  
+        <ITEM NAME="PARAM_VALUE" FIELD="String" VALUE="&quot;parameterValue&quot;"/>  
+        <ITEM NAME="PARAM_TYPE" VALUE="String" FIELD="CLOSED_LIST"> 
+          <ITEMS DEFAULT="NoConversion"> 
+            <ITEM NAME="NoConversion" VALUE="NoConversion"/>  
+            <ITEM NAME="BigDecimal" VALUE="BigDecimal"/>  
+            <ITEM NAME="Boolean" VALUE="Boolean"/>  
+            <ITEM NAME="Date" VALUE="Date"/>  
+            <ITEM NAME="Double" VALUE="Double"/>  
+            <ITEM NAME="Float" VALUE="Float"/>  
+            <ITEM NAME="Int" VALUE="Int"/>  
+            <ITEM NAME="Long" VALUE="Long"/>  
+            <ITEM NAME="Short" VALUE="Short"/>  
+            <ITEM NAME="String" VALUE="String"/>  
+            <ITEM NAME="Timestamp" VALUE="Timestamp"/> 
+          </ITEMS> 
+        </ITEM>  
+        <ITEM NAME="PARAM_IS_COLLECTION" FIELD="CHECK"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="COLLECTION_DELIMITER" FIELD="TEXT" NUM_ROW="90"> 
+      <DEFAULT>"|"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CHECK_PARAMETERS" FIELD="CHECK" NUM_ROW="90"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CONVERSION_PATTERN" FIELD="TEXT" NUM_ROW="100"> 
+      <DEFAULT>"yyyy-MM-dd"</DEFAULT> 
+    </PARAMETER> 
+  </PARAMETERS>  
+  <ADVANCED_PARAMETERS> 
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_DETECT_CELL_TYPE" NUM_ROW="10" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_WHITE_PAGE_BACKGROUND" NUM_ROW="20" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS" NUM_ROW="30" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS" NUM_ROW="40" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_ONE_PAGE_PER_SHEET" NUM_ROW="50" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="FILE" NAME="XLS_WORKBOOK_TEMPLATE" NUM_ROW="60" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_WORKBOOK_TEMPLATE_KEEP_SHEETS" NUM_ROW="60" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_COMPRESSED" FIELD="CHECK" NUM_ROW="10" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_CREATING_BATCH_MODE_BOOKMARKS" FIELD="CHECK" NUM_ROW="20" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_ENCRYPTED" FIELD="CHECK" NUM_ROW="30" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_128_BIT_KEY" FIELD="CHECK" NUM_ROW="30" GROUP="OPTIONS_PDF" SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_IS_ENCRYPTED == 'true')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_PASSWORD" FIELD="TEXT" NUM_ROW="30" GROUP="OPTIONS_PDF" SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_IS_ENCRYPTED == 'true')" REQUIRED="true"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_AUTHOR" FIELD="TEXT" NUM_ROW="40" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_CREATOR" FIELD="TEXT" NUM_ROW="50" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>"TIPCO JasperReports and Talend | Job: " + jobName</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_TITLE" FIELD="TEXT" NUM_ROW="60" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_SUBJECT" FIELD="TEXT" NUM_ROW="70" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_VERSION" FIELD="CLOSED_LIST" NUM_ROW="80" NB_LINES="6" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <ITEMS DEFAULT="VERSION_1_4"> 
+        <ITEM NAME="VERSION_1_2" VALUE="2"/>  
+        <ITEM NAME="VERSION_1_3" VALUE="3"/>  
+        <ITEM NAME="VERSION_1_4" VALUE="4"/>  
+        <ITEM NAME="VERSION_1_5" VALUE="5"/>  
+        <ITEM NAME="VERSION_1_6" VALUE="6"/>  
+        <ITEM NAME="VERSION_1_7" VALUE="7"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_KEYWORDS" FIELD="TEXT" NUM_ROW="90" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="USE_JAVA_AS_LANG" FIELD="CHECK" NUM_ROW="100"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="LIST_PARAMETERS" FIELD="CHECK" NUM_ROW="100" SHOW_IF="CHECK_PARAMETERS == 'true'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="RELEASE_LABEL_20170126" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 2.2 build at: 20170126</DEFAULT>
     </PARAMETER>
-
-	<PARAMETER NAME="CONNECTION" FIELD="COMPONENT_LIST"
-			FILTER="REGEXP:^(.)*(Connection)(.)*" NUM_ROW="2"
-			DYNAMIC_SETTINGS="true" SHOW_IF="DATASOURCE == 'DB_CONNECTION'"/>
-
-    <PARAMETER NAME="XML_DS_FILE" FIELD="FILE" NUM_ROW="2" REQUIRED="true" SHOW_IF="DATASOURCE == 'XML_FILE'">
-      <DEFAULT>"/path/to/xmlfile"</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="XML_USE_SELECT_EXPR_FROM_REPORT" FIELD="CHECK" NUM_ROW="3" SHOW_IF="DATASOURCE == 'XML_FILE'">
-      <DEFAULT>true</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="XML_SELECT_EXPR" FIELD="TEXT" NUM_ROW="3" SHOW_IF="(DATASOURCE == 'XML_FILE') and (XML_USE_SELECT_EXPR_FROM_REPORT == 'false')">
-      <DEFAULT>"."</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="XML_DATE_PATTERN" FIELD="TEXT" NUM_ROW="4" SHOW_IF="DATASOURCE == 'XML_FILE'">
-      <DEFAULT>"dd.MM.yyyy"</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="XML_NUMBER_PATTERN" FIELD="TEXT" NUM_ROW="4" SHOW_IF="DATASOURCE == 'XML_FILE'">
-      <DEFAULT>"###0.00;-###0.00"</DEFAULT>
-    </PARAMETER>
-    
-    <PARAMETER NAME="DUMMY_DS_NUMBER_RECORDS" FIELD="TEXT" NUM_ROW="2" SHOW_IF="DATASOURCE == 'DUMMY_DS'" REQUIRED="true">
-      <DEFAULT>1</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="JRXML_FILE" FIELD="FILE" NUM_ROW="10" REQUIRED="true">
-      <DEFAULT>""</DEFAULT>
-    </PARAMETER>
-    
-	<PARAMETER NAME="OUTPUT_TYPE" FIELD="CLOSED_LIST" NUM_ROW="20" REQUIRED="true">
-    	<ITEMS DEFAULT="PDF">
-    		<ITEM NAME="CSV" VALUE="CSV" />
-    		<ITEM NAME="DOCX" VALUE="DOCX" />
-    		<ITEM NAME="HTML" VALUE="HTML" />
-    		<ITEM NAME="ODT" VALUE="ODT" />
-    		<ITEM NAME="ODS" VALUE="ODS" />
-    		<ITEM NAME="PDF" VALUE="PDF" />
-    		<ITEM NAME="RTF" VALUE="RTF" />
-    		<ITEM NAME="TEXT" VALUE="TXT" />
-    		<ITEM NAME="XLS" VALUE="XLS" />
-    		<ITEM NAME="XLSX" VALUE="XLSX" />
-    		<ITEM NAME="PPTX" VALUE="PPTX" />
-    	</ITEMS>
-    </PARAMETER>
-
-    <PARAMETER NAME="OUTPUT_LOCALE" FIELD="TEXT" NUM_ROW="30" >
-      <DEFAULT>"de"</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="OUTPUT_DIR" FIELD="TEXT" NUM_ROW="40" REQUIRED="true">
-      <DEFAULT>""</DEFAULT>
-    </PARAMETER>
-    
-    <PARAMETER NAME="OUTPUT_FILENAME" FIELD="TEXT" NUM_ROW="50" REQUIRED="true">
-      <DEFAULT>"report_out"</DEFAULT>
-    </PARAMETER>
-    
-    <PARAMETER NAME="OVERWRITE_FILES" FIELD="CHECK" NUM_ROW="60" >
-    	<DEFAULT>true</DEFAULT>
-    </PARAMETER>
-    
-    <PARAMETER NAME="CREATE_DIRS" FIELD="CHECK" NUM_ROW="60" >
-    	<DEFAULT>true</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="SEQUENTIAL_FILENAMES" FIELD="CHECK" NUM_ROW="70" >
-    	<DEFAULT>true</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="TIMESTAMP_PATTERN" FIELD="TEXT" NUM_ROW="70" REQUIRED="true" SHOW_IF="SEQUENTIAL_FILENAMES == 'true'">
-    	<DEFAULT>"yyyyMMdd_HHmmss"</DEFAULT>
-    </PARAMETER>
-
- 	<PARAMETER NAME="REPORT_PARAMS" FIELD="TABLE" NUM_ROW="80" NB_LINES="5">
-      <ITEMS>
-        <ITEM NAME="PARAM_NAME" FIELD="String" VALUE='"parameterName"'/>
-        <ITEM NAME="PARAM_VALUE" FIELD="String" VALUE='"parameterValue"'/>
-		<ITEM NAME="PARAM_TYPE" VALUE="String" FIELD="CLOSED_LIST">
-			<ITEMS DEFAULT="NoConversion">
-        		<ITEM NAME="NoConversion"  	VALUE="NoConversion"/>
-        		<ITEM NAME="BigDecimal"  	VALUE="BigDecimal"/>
-        		<ITEM NAME="Boolean"  		VALUE="Boolean"/>
-        		<ITEM NAME="Date" 			VALUE="Date"/>
-        		<ITEM NAME="Double"			VALUE="Double"/>
-        		<ITEM NAME="Float" 			VALUE="Float"/>
-        		<ITEM NAME="Int" 			VALUE="Int"/>
-        		<ITEM NAME="Long" 			VALUE="Long"/>
-        		<ITEM NAME="Short" 		    VALUE="Short"/>
-        		<ITEM NAME="String" 		VALUE="String"/>
-        		<ITEM NAME="Timestamp" 		VALUE="Timestamp"/>
-        	</ITEMS>
-		</ITEM>
-        <ITEM NAME="PARAM_IS_COLLECTION" FIELD="CHECK"/>
-      </ITEMS>
-	</PARAMETER>
-    
-    <PARAMETER NAME="COLLECTION_DELIMITER" FIELD="TEXT" NUM_ROW="90">
-      <DEFAULT>"|"</DEFAULT>
-    </PARAMETER>
-    
-    <PARAMETER NAME="CHECK_PARAMETERS" FIELD="CHECK" NUM_ROW="90">
-      <DEFAULT>false</DEFAULT>
-    </PARAMETER>
-
-    <PARAMETER NAME="CONVERSION_PATTERN" FIELD="TEXT" NUM_ROW="100">
-      <DEFAULT>"yyyy-MM-dd"</DEFAULT>
-    </PARAMETER>
-
-  </PARAMETERS>
-
-	<ADVANCED_PARAMETERS>
-		<PARAMETER 
-			FIELD="CHECK" 
-			NAME="XLS_IS_DETECT_CELL_TYPE" 
-			NUM_ROW="10" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT>true</DEFAULT>
-		</PARAMETER>
-		<PARAMETER 
-			FIELD="CHECK" 
-			NAME="XLS_IS_WHITE_PAGE_BACKGROUND" 
-			NUM_ROW="20" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT>false</DEFAULT>
-		</PARAMETER>
-		<PARAMETER 
-			FIELD="CHECK" 
-			NAME="XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS" 
-			NUM_ROW="30" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT>true</DEFAULT>
-		</PARAMETER>
-		<PARAMETER 
-			FIELD="CHECK" 
-			NAME="XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS" 
-			NUM_ROW="40" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT>true</DEFAULT>
-		</PARAMETER>
-		<PARAMETER
-			FIELD="CHECK" 
-			NAME="XLS_IS_ONE_PAGE_PER_SHEET" 
-			NUM_ROW="50" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT>false</DEFAULT>
-		</PARAMETER>
-		<PARAMETER
-			FIELD="FILE" 
-			NAME="XLS_WORKBOOK_TEMPLATE" 
-			NUM_ROW="60" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT></DEFAULT>
-		</PARAMETER>
-		<PARAMETER
-			FIELD="CHECK"
-			NAME="XLS_WORKBOOK_TEMPLATE_KEEP_SHEETS" 
-			NUM_ROW="60" 
-			GROUP="OPTIONS_XLS_XLSX"
-			SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')">
-			<DEFAULT>false</DEFAULT>
-		</PARAMETER>
-
-	    <PARAMETER 
-	   		NAME="PDF_IS_COMPRESSED" 
-	   		FIELD="CHECK" 
-	   		NUM_ROW="10" 
-			GROUP="OPTIONS_PDF"
-	   		SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT>false</DEFAULT>
-	    </PARAMETER>
-		
-	    <PARAMETER 
-	    	NAME="PDF_IS_CREATING_BATCH_MODE_BOOKMARKS" 
-	    	FIELD="CHECK" 
-	    	NUM_ROW="20" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT>false</DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_IS_ENCRYPTED"
-	    	FIELD="CHECK" 
-	    	NUM_ROW="30" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT>false</DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_IS_128_BIT_KEY" 
-	    	FIELD="CHECK" 
-	    	NUM_ROW="30" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_IS_ENCRYPTED == 'true')" >
-	      <DEFAULT>true</DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_PASSWORD" 
-	    	FIELD="TEXT" 
-	    	NUM_ROW="30" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_IS_ENCRYPTED == 'true')" 
-	    	REQUIRED="true">
-	      <DEFAULT></DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_AUTHOR" 
-	    	FIELD="TEXT" 
-	    	NUM_ROW="40" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT></DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_CREATOR" 
-	    	FIELD="TEXT" 
-	    	NUM_ROW="50" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT>"TIPCO JasperReports and Talend | Job: " + jobName</DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_TITLE" 
-	    	FIELD="TEXT" 
-	    	NUM_ROW="60" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT></DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_SUBJECT" 
-	    	FIELD="TEXT" 
-	    	NUM_ROW="70" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT></DEFAULT>
-	    </PARAMETER>
-
-	 	<PARAMETER 
-	 		NAME="PDF_VERSION" 
-	 		FIELD="CLOSED_LIST" 
-	 		NUM_ROW="80" 
-	 		NB_LINES="6"
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-			<ITEMS DEFAULT="VERSION_1_4">
-        		<ITEM NAME="VERSION_1_2"  VALUE="2"/>
-        		<ITEM NAME="VERSION_1_3"  VALUE="3"/>
-        		<ITEM NAME="VERSION_1_4"  VALUE="4"/>
-        		<ITEM NAME="VERSION_1_5"  VALUE="5"/>
-        		<ITEM NAME="VERSION_1_6"  VALUE="6"/>
-        		<ITEM NAME="VERSION_1_7"  VALUE="7"/>
-        	</ITEMS>
-		</PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="PDF_KEYWORDS" 
-	    	FIELD="TEXT" 
-	    	NUM_ROW="90" 
-			GROUP="OPTIONS_PDF"
-	    	SHOW_IF="OUTPUT_TYPE == 'PDF'">
-	      <DEFAULT></DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="USE_JAVA_AS_LANG" 
-	    	FIELD="CHECK" 
-	    	NUM_ROW="100">
-	      <DEFAULT>false</DEFAULT>
-	    </PARAMETER>
-
-	    <PARAMETER 
-	    	NAME="LIST_PARAMETERS" 
-	    	FIELD="CHECK" 
-	    	NUM_ROW="100"
-	    	SHOW_IF="CHECK_PARAMETERS == 'true'">
-	      <DEFAULT>false</DEFAULT>
-	    </PARAMETER>
-
-	</ADVANCED_PARAMETERS>
-
-  <CODEGENERATION>
-	<IMPORTS>
-		<IMPORT NAME="bcprov-jdk16-1.46" MODULE="bcprov-jdk16-1.46.jar" REQUIRED="true" />
-		<IMPORT NAME="bctsp-jdk16-1.46" MODULE="bctsp-jdk16-1.46.jar" REQUIRED="true" />
-		<IMPORT NAME="castor-core-1.3.3" MODULE="castor-core-1.3.3.jar" REQUIRED="true" />
-		<IMPORT NAME="castor-xml-1.3.3" MODULE="castor-xml-1.3.3.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-beanutils-1.9.0" MODULE="commons-beanutils-1.9.0.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-codec-1.9" MODULE="commons-codec-1.9.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-collections-3.2.1" MODULE="commons-collections-3.2.1.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-digester-2.1" MODULE="commons-digester-2.1.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-lang-2.6" MODULE="commons-lang-2.6.jar" REQUIRED="true" />
-		<IMPORT NAME="commons-logging-1.1.1" MODULE="commons-logging-1.1.1.jar" REQUIRED="true" />
-		<IMPORT NAME="core-2.3.0" MODULE="core-2.3.0.jar" REQUIRED="true" />
-		<IMPORT NAME="de.jlo.talendcomp.jasperreportexec-2.1" MODULE="de.jlo.talendcomp.jasperreportexec-2.1.jar" REQUIRED="true" />
-		<IMPORT NAME="dom4j-1.6.1" MODULE="dom4j-1.6.1.jar" REQUIRED="true" />
-		<IMPORT NAME="ecj-4.3.1" MODULE="ecj-4.3.1.jar" REQUIRED="true" />
-		<IMPORT NAME="groovy-2.4.4" MODULE="groovy-2.4.4.jar" REQUIRED="true" />
-		<IMPORT NAME="itext-2.1.7.js3" MODULE="itext-2.1.7.js3.jar" REQUIRED="true" />
-		<IMPORT NAME="jackson-annotations-2.1.4" MODULE="jackson-annotations-2.1.4.jar" REQUIRED="true" />
-		<IMPORT NAME="jackson-core-2.1.4" MODULE="jackson-core-2.1.4.jar" REQUIRED="true" />
-		<IMPORT NAME="jackson-databind-2.1.4" MODULE="jackson-databind-2.1.4.jar" REQUIRED="true" />
-		<IMPORT NAME="jasperreports-6.2.0" MODULE="jasperreports-6.2.0.jar" REQUIRED="true" />
-		<IMPORT NAME="jasperreports-fonts-6.0.0" MODULE="jasperreports-fonts-6.0.0.jar" REQUIRED="true" />
-		<IMPORT NAME="jasperreports-functions-6.1.0" MODULE="jasperreports-fonts-6.0.0.jar" REQUIRED="true" />
-		<IMPORT NAME="jcommon-1.0.23" MODULE="jcommon-1.0.23.jar" REQUIRED="true" />
-		<IMPORT NAME="jfreechart-1.0.19" MODULE="jfreechart-1.0.19.jar" REQUIRED="true" />
-		<IMPORT NAME="joda-time-2.8.2" MODULE="joda-time-2.8.2.jar" REQUIRED="true" />
-		<IMPORT NAME="pdf-renderer-1.0.5" MODULE="pdf-renderer-1.0.5.jar" REQUIRED="true" />
-		<IMPORT NAME="poi-3.12" MODULE="poi-3.12.jar" REQUIRED="true" />
-		<IMPORT NAME="poi-ooxml-3.12" MODULE="poi-ooxml-3.12.jar" REQUIRED="true" />
-		<IMPORT NAME="poi-ooxml-schemas-3.12" MODULE="poi-ooxml-schemas-3.12.jar" REQUIRED="true" />
-		<IMPORT NAME="serializer-2.7.2" MODULE="serializer-2.7.2.jar" REQUIRED="true" />
-		<IMPORT NAME="spring-beans-3.2.4.RELEASE" MODULE="spring-beans-3.2.4.RELEASE.jar" REQUIRED="true" />
-		<IMPORT NAME="spring-core-3.2.4.RELEASE" MODULE="spring-core-3.2.4.RELEASE.jar" REQUIRED="true" />
-		<IMPORT NAME="xalan-2.7.2" MODULE="xalan-2.7.2.jar" REQUIRED="true" />
-		<IMPORT NAME="xml-apis-1.3.04" MODULE="xml-apis-1.3.04.jar" REQUIRED="true" />
-		<IMPORT NAME="xmlbeans-2.6.0" MODULE="xmlbeans-2.6.0.jar" REQUIRED="true" />
-    </IMPORTS>
-  </CODEGENERATION>
-
-  <RETURNS>
-    <RETURN NAME="OUTPUT_FILE" TYPE="id_String" AVAILABILITY="AFTER" />
-    <RETURN NAME="NUMBER_OF_PAGES" TYPE="id_Integer" AVAILABILITY="AFTER" />
-    <RETURN NAME="REPORT_QUERY" TYPE="id_String" AVAILABILITY="AFTER" />
+  </ADVANCED_PARAMETERS>  
+  <CODEGENERATION> 
+    <IMPORTS> 
+      <IMPORT NAME="cimt-talendcomp-jasperreportexec" MODULE="cimt-talendcomp-jasperreportexec-2.2.jar" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.0.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="joda-time" MODULE="joda-time-2.8.2.jar" REQUIRED="true"/>
+      <IMPORT NAME="groovy" MODULE="groovy-2.4.4.jar" REQUIRED="true"/>
+      <IMPORT NAME="poi-ooxml" MODULE="poi-ooxml-3.14.jar" REQUIRED="true"/>
+      <IMPORT NAME="poi" MODULE="poi-3.14.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-codec" MODULE="commons-codec-1.10.jar" REQUIRED="true"/>
+      <IMPORT NAME="poi-ooxml-schemas" MODULE="poi-ooxml-schemas-3.14.jar" REQUIRED="true"/>
+      <IMPORT NAME="xmlbeans" MODULE="xmlbeans-2.6.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="curvesapi" MODULE="curvesapi-1.03.jar" REQUIRED="true"/>
+      <IMPORT NAME="xalan" MODULE="xalan-2.7.2.jar" REQUIRED="true"/>
+      <IMPORT NAME="serializer" MODULE="serializer-2.7.2.jar" REQUIRED="true"/>
+      <IMPORT NAME="itext" MODULE="itext-2.1.7.js3.jar" REQUIRED="true"/>
+      <IMPORT NAME="pdf-renderer" MODULE="pdf-renderer-1.0.5.jar" REQUIRED="true"/>
+      <IMPORT NAME="bcprov-jdk16" MODULE="bcprov-jdk16-1.46.jar" REQUIRED="true"/>
+      <IMPORT NAME="bctsp-jdk16" MODULE="bctsp-jdk16-1.46.jar" REQUIRED="true"/>
+      <IMPORT NAME="dom4j" MODULE="dom4j-1.6.1.jar" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.2.1.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-digester" MODULE="commons-digester-2.1.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" REQUIRED="true"/>
+      <IMPORT NAME="jcommon" MODULE="jcommon-1.0.23.jar" REQUIRED="true"/>
+      <IMPORT NAME="jfreechart" MODULE="jfreechart-1.0.19.jar" REQUIRED="true"/>
+      <IMPORT NAME="ecj" MODULE="ecj-4.3.1.jar" REQUIRED="true"/>
+      <IMPORT NAME="castor-xml" MODULE="castor-xml-1.3.3.jar" REQUIRED="true"/>
+      <IMPORT NAME="castor-core" MODULE="castor-core-1.3.3.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-lang" MODULE="commons-lang-2.6.jar" REQUIRED="true"/>
+      <IMPORT NAME="jackson-core" MODULE="jackson-core-2.1.4.jar" REQUIRED="true"/>
+      <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.1.4.jar" REQUIRED="true"/>
+      <IMPORT NAME="jackson-annotations" MODULE="jackson-annotations-2.1.4.jar" REQUIRED="true"/>
+      <IMPORT NAME="core" MODULE="core-2.3.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.1.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="spring-core" MODULE="spring-core-3.2.4.RELEASE.jar" REQUIRED="true"/>
+      <IMPORT NAME="spring-beans" MODULE="spring-beans-3.2.4.RELEASE.jar" REQUIRED="true"/>
+    </IMPORTS> 
+  </CODEGENERATION>  
+  <RETURNS> 
+    <RETURN NAME="OUTPUT_FILE" TYPE="id_String" AVAILABILITY="AFTER"/>  
+    <RETURN NAME="NUMBER_OF_PAGES" TYPE="id_Integer" AVAILABILITY="AFTER"/>  
+    <RETURN NAME="REPORT_QUERY" TYPE="id_String" AVAILABILITY="AFTER"/> 
   </RETURNS>
-
 </COMPONENT>
