@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.cimt.talendcomp</groupId>
 	<artifactId>cimt-talendcomp-jasperreportexec</artifactId>
-	<version>2.2</version>
+	<version>2.3</version>
 	<repositories>
 		<repository>
 			<id>releases</id>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.14</version>
+			<version>3.15</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>stax-api</artifactId>
