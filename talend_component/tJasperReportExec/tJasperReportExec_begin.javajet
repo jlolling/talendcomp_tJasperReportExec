@@ -30,7 +30,7 @@
 	String useJavaCompiler = ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__");
 	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
 %>
-    de.cimt.talendcomp.jasperreportexec.JasperReportExecuter <%=cid%> = new de.cimt.talendcomp.jasperreportexec.JasperReportExecuter();
+    de.jlo.talendcomp.jasperreportexec.JasperReportExecuter <%=cid%> = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
     try {
     	<%=cid%>.setJrxmlFile(<%=jrxmlFile%>);
     	<%=cid%>.setFixLanguage(<%=useJavaCompiler%>);

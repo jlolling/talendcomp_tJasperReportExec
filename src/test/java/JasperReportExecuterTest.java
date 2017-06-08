@@ -6,8 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.jlo.talendcomp.jasperreportexec.JasperReportExecuter;
 import net.sf.jasperreports.engine.util.JRStyledTextParser;
-import de.cimt.talendcomp.jasperreportexec.JasperReportExecuter;
 
 
 public class JasperReportExecuterTest {
@@ -131,7 +131,7 @@ public class JasperReportExecuterTest {
 		
 		JRStyledTextParser.getInstance();
 		
-		de.cimt.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.cimt.talendcomp.jasperreportexec.JasperReportExecuter();
+		de.jlo.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
 		try {
 			tJasperReportExec_1
 					.setJrxmlFile("/var/testdata/jasper/shipping_report.jrxml");
@@ -203,7 +203,7 @@ public class JasperReportExecuterTest {
 	}
 
 	public static void testXML() throws Exception {
-		de.cimt.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.cimt.talendcomp.jasperreportexec.JasperReportExecuter();
+		de.jlo.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
 		try {
 			tJasperReportExec_1
 					.setJrxmlFile("/Volumes/Data/Jaspersoft/workspace_test/MyReports/xml_test_main.jrxml");

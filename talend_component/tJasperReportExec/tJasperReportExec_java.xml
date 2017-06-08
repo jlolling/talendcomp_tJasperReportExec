@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <COMPONENT> 
-  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="2.3" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20170128" STARTABLE="true"> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="2.3" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20170608" STARTABLE="true"> 
     <SIGNATURE/> 
   </HEADER>  
   <FAMILIES> 
@@ -184,13 +184,13 @@
     <PARAMETER NAME="LIST_PARAMETERS" FIELD="CHECK" NUM_ROW="100" SHOW_IF="CHECK_PARAMETERS == 'true'"> 
       <DEFAULT>false</DEFAULT> 
     </PARAMETER>  
-    <PARAMETER NAME="RELEASE_LABEL_20170128" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
-      <DEFAULT>Release: 2.3 build at: 20170128</DEFAULT>
+    <PARAMETER NAME="RELEASE_LABEL_20170608" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 2.3 build at: 20170608</DEFAULT>
     </PARAMETER>
   </ADVANCED_PARAMETERS>  
   <CODEGENERATION> 
     <IMPORTS> 
-      <IMPORT NAME="cimt-talendcomp-jasperreportexec" MODULE="cimt-talendcomp-jasperreportexec-2.3.jar" REQUIRED="true"/>
+      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-2.3.jar" REQUIRED="true"/>
       <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.0.0.jar" REQUIRED="true"/>
       <IMPORT NAME="joda-time" MODULE="joda-time-2.8.2.jar" REQUIRED="true"/>
       <IMPORT NAME="groovy" MODULE="groovy-2.4.4.jar" REQUIRED="true"/>
