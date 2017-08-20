@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <COMPONENT> 
-  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="2.4" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20170613" STARTABLE="true"> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="2.5" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20170821" STARTABLE="true"> 
     <SIGNATURE/> 
   </HEADER>  
   <FAMILIES> 
@@ -184,13 +184,13 @@
     <PARAMETER NAME="LIST_PARAMETERS" FIELD="CHECK" NUM_ROW="100" SHOW_IF="CHECK_PARAMETERS == 'true'"> 
       <DEFAULT>false</DEFAULT> 
     </PARAMETER>  
-    <PARAMETER NAME="RELEASE_LABEL_20170613" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
-      <DEFAULT>Release: 2.4 build at: 20170613</DEFAULT>
+    <PARAMETER NAME="RELEASE_LABEL_20170821" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 2.5 build at: 20170821</DEFAULT>
     </PARAMETER>
   </ADVANCED_PARAMETERS>  
   <CODEGENERATION> 
     <IMPORTS> 
-      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-2.4.jar" REQUIRED="true"/>
+      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-2.5.jar" REQUIRED="true"/>
       <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.0.0.jar" REQUIRED="true"/>
       <IMPORT NAME="joda-time" MODULE="joda-time-2.9.9.jar" REQUIRED="true"/>
       <IMPORT NAME="groovy" MODULE="groovy-2.4.11.jar" REQUIRED="true"/>
@@ -208,8 +208,8 @@
       <IMPORT NAME="bcprov-jdk16" MODULE="bcprov-jdk16-1.46.jar" REQUIRED="true"/>
       <IMPORT NAME="bctsp-jdk16" MODULE="bctsp-jdk16-1.46.jar" REQUIRED="true"/>
       <IMPORT NAME="dom4j" MODULE="dom4j-1.6.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.4.0.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.4.1.jar" REQUIRED="true"/>
+      <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.3.jar" REQUIRED="true"/>
       <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" REQUIRED="true"/>
       <IMPORT NAME="commons-digester" MODULE="commons-digester-2.1.jar" REQUIRED="true"/>
       <IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" REQUIRED="true"/>
@@ -224,7 +224,7 @@
       <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.7.5.jar" REQUIRED="true"/>
       <IMPORT NAME="jackson-annotations" MODULE="jackson-annotations-2.7.0.jar" REQUIRED="true"/>
       <IMPORT NAME="jackson-core" MODULE="jackson-core-2.7.5.jar" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.1.0.jar" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.4.1.jar" REQUIRED="true"/>
       <IMPORT NAME="spring-core" MODULE="spring-core-3.2.4.RELEASE.jar" REQUIRED="true"/>
       <IMPORT NAME="spring-beans" MODULE="spring-beans-3.2.4.RELEASE.jar" REQUIRED="true"/>
     </IMPORTS> 
