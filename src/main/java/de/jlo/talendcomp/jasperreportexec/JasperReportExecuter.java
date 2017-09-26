@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.xml.sax.InputSource;
+
 import net.sf.jasperreports.crosstabs.JRCrosstab;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRAbstractExporter;
@@ -104,8 +106,6 @@ import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.export.WriterExporterOutput;
 import net.sf.jasperreports.export.type.PdfVersionEnum;
-
-import org.xml.sax.InputSource;
 
 public class JasperReportExecuter {
 
@@ -1019,7 +1019,7 @@ public class JasperReportExecuter {
 	public void setXmlDataSource(String filePath, String selectExpression, String datePattern, String numberPattern) throws Exception {
 		File file = new File(filePath);
 		if (file.canRead() == false) {
-			throw new Exception("XML File:" + file.getAbsolutePath() + " cannot be read");
+			throw new Exception("XML File:" + file.getAbsolutePath() + " cannot be read or does not exist.");
 		}
 		JRXmlDataSource xmlDs = null;
 		if (selectExpression != null && selectExpression.isEmpty() == false) {

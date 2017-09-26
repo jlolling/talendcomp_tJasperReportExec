@@ -46,8 +46,9 @@
 	String pdfKeywords = ElementParameterParser.getValue(node, "__PDF_KEYWORDS__");
 	String pdfVersion = ElementParameterParser.getValue(node, "__PDF_VERSION__");
 	boolean checkParameters = "true".equals(ElementParameterParser.getValue(node, "__CHECK_PARAMETERS__"));
+	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
 %>	
-	{
+	if (<%=cid%>_ok) {
 		String dir = <%=outputDir%>;
 <%  if (createDirs) { %>
 		java.io.File dirf = new java.io.File(dir);
@@ -55,7 +56,13 @@
 			 dirf.mkdirs(); // create the whole path
 		}
 		if (dirf.exists() == false) {
-			 throw new Exception("Output dir: " + dir + " does not exists and cannot be created.");
+			String message = "Export failed: output dir: " + dir + " does not exists and cannot be created.";
+		    globalMap.put("<%=cid%>_ERROR_MESSAGE", message);
+		    <%=cid%>_ok = false;
+			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
+<%		if (dieOnError) { %>
+			throw new Exception(message);
+<%		} %>
 		}
 <%  } %>
 		<%=cid%>.setOutputDir(dir);
@@ -135,31 +142,52 @@
 <%          }%>
 <%      }
 	}
-    boolean listParameters = "true".equals(ElementParameterParser.getValue(node, "__LIST_PARAMETERS__"));
-    if (checkParameters) { %>
-	// check parameters
-	try {
-		<%=cid%>.setPrintJRParameters(<%=listParameters%>);	
-		<%=cid%>.checkInputParameters();	
-	} catch(Exception e) {
-	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
-		throw e;
+    boolean listParameters = "true".equals(ElementParameterParser.getValue(node, "__LIST_PARAMETERS__")); %>
+<%  if (checkParameters) { %>
+	if (<%=cid%>_ok) {
+		// check parameters
+		try {
+			<%=cid%>.setPrintJRParameters(<%=listParameters%>);	
+			<%=cid%>.checkInputParameters();	
+		} catch (Exception e) {
+			String message = "Set and check report parameters failed: " + e.getMessage();
+	    	globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
+	    	<%=cid%>_ok = false;
+			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
+<%		if (dieOnError) { %>
+			throw e;
+<%  	} %>
+		}
 	}
 <%  } %>
-   // fill report with data
-	globalMap.put("<%=cid%>_REPORT_QUERY", <%=cid%>.getQueryString());
-   try {
-		<%=cid%>.fillReport();
-		globalMap.put("<%=cid%>_NUMBER_OF_PAGES", <%=cid%>.getNumberReportPages());
-	} catch(Exception e) {
-	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
-		throw e;
+	if (<%=cid%>_ok) {
+		// fill report with data
+		globalMap.put("<%=cid%>_REPORT_QUERY", <%=cid%>.getQueryString());
+		try {
+			<%=cid%>.fillReport();
+			globalMap.put("<%=cid%>_NUMBER_OF_PAGES", <%=cid%>.getNumberReportPages());
+		} catch (Exception e) {
+			String message = "Fill report failed: " + e.getMessage();
+	    	globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
+	    	<%=cid%>_ok = false;
+			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
+<%	if (dieOnError) { %>
+			throw e;
+<%  } %>
+		}
 	}
-   // export report data
-   try {
-		<%=cid%>.exportReport();
-		globalMap.put("<%=cid%>_OUTPUT_FILE", <%=cid%>.getOutputFile());
-	} catch(Exception e) {
-	    globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage()); 
-		throw e;
+	if (<%=cid%>_ok) {
+		// export report data
+		try {
+			<%=cid%>.exportReport();
+			globalMap.put("<%=cid%>_OUTPUT_FILE", <%=cid%>.getOutputFile());
+		} catch (Exception e) {
+			String message = "Export report failed: " + e.getMessage();
+	    	globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
+	    	<%=cid%>_ok = false;
+			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
+<%	if (dieOnError) { %>
+			throw e;
+<%  } %>
+		}
 	}
