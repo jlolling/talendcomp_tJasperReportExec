@@ -17,6 +17,8 @@ package de.jlo.talendcomp.jasperreportexec;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.IOUtils;
 import org.xml.sax.InputSource;
 
 import net.sf.jasperreports.crosstabs.JRCrosstab;
@@ -151,6 +154,7 @@ public class JasperReportExecuter {
 	private String queryString = null;
 	private List<JRParameter> listJRParameters = null;
 	private boolean printJRParameters = false;
+	private boolean replaceJrxmlRef = true;
 
 	public String getOutputDir() {
 		return outputDir;
@@ -353,6 +357,21 @@ public class JasperReportExecuter {
 		JRXmlLoader loader = new JRXmlLoader(
 					DefaultJasperReportsContext.getInstance(), 
 					JRXmlDigesterFactory.createDigester(DefaultJasperReportsContext.getInstance()));
+		if (jrxmlFile.exists() == false) {
+			throw new Exception("jrxml file: " + jrxmlFile.getAbsolutePath() + " does not exist.");
+		}
+		if (replaceJrxmlRef) {
+			String jrxmlContent = IOUtils.toString(new FileInputStream(jrxmlFile), "UTF-8");
+			if (jrxmlContent.contains(".jrxml")) {
+				// jrxml reference detected
+				jrxmlContent = jrxmlContent.replace(".jrxml", ".jasper");
+				jrxmlFile.renameTo(new File(jrxmlFile.getAbsolutePath()+".original"));
+				Writer out = new FileWriter(jrxmlFile.getAbsolutePath());
+				IOUtils.write(jrxmlContent.getBytes(), out, "UTF-8");
+				out.flush();
+				out.close();
+			}
+		}
 		FileInputStream fis = new FileInputStream(jrxmlFile);
 		InputSource source = new InputSource(fis);
 		source.setEncoding("UTF-8");
@@ -407,9 +426,10 @@ public class JasperReportExecuter {
 
 			@Override
 			public void visitSubreport(JRSubreport subreport) {
-				String expression = subreport.getExpression()
-						.getText()
-						.replace(".jasper", ".jrxml");
+				String expression = subreport
+						.getExpression()
+						.getText();
+				expression = expression.replace(".jasper", ".jrxml");
 				StringTokenizer st = new StringTokenizer(expression, "\"");
 				String subReportPath = null;
 				while (st.hasMoreTokens()) {
@@ -861,12 +881,12 @@ public class JasperReportExecuter {
 	 */
 	public void setAndConvertParameterValue(
 			String parameterName,
-			String valueAsString, 
+			Object valueAsString, 
 			String dataType, 
 			String pattern)
 			throws Exception {
 		parameterMap.put(parameterName,
-				Util.convertToDatatype(valueAsString, dataType, pattern));
+				Util.convertToDatatype(String.valueOf(valueAsString), dataType, pattern));
 	}
 
 	public Object getParameterValue(String parameterName) {

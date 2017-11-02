@@ -206,13 +206,13 @@ public class JasperReportExecuterTest {
 		de.jlo.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
 		try {
 			tJasperReportExec_1
-					.setJrxmlFile("/Volumes/Data/Jaspersoft/workspace_test/MyReports/xml_test_main.jrxml");
+					.setJrxmlFile("/Data/Jaspersoft/workspace_test/MyReports/xml_test_main.jrxml");
 			tJasperReportExec_1.setFixLanguage(false);
 			System.out.println("Compile...");
 			tJasperReportExec_1.compileReport();
 			System.out.println("Set Datasource...");
 			tJasperReportExec_1.setXmlDataSource(
-					"/Volumes/Data/Talend/testdata/xml/keyfigures.xml",
+					"/Data/Talend/testdata/xml/keyfigures.xml",
 					null, "dd.MM.yyyy", "###0.00;-###0.00");
 		} catch (Exception e) {
 			globalMap.put("tJasperReportExec_1_ERROR_MESSAGE",
@@ -230,7 +230,7 @@ public class JasperReportExecuterTest {
 		currentComponent = "tJasperReportExec_1";
 
 		tJasperReportExec_1
-				.setOutputDir("/Volumes/Data/Talend/testdata/xml/");
+				.setOutputDir("/Data/Talend/testdata/xml/");
 		tJasperReportExec_1.setOutputFileNameWithoutExt("keyfigures");
 		tJasperReportExec_1.setOutputFormat("PDF");
 		tJasperReportExec_1.setOverwriteFiles(true);
