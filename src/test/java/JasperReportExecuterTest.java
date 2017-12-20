@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.jlo.talendcomp.jasperreportexec.JasperReportExecuter;
-import net.sf.jasperreports.engine.util.JRStyledTextParser;
 
 
 public class JasperReportExecuterTest {
@@ -20,7 +19,7 @@ public class JasperReportExecuterTest {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		testXML();
+		talendJobTest();
 	}
 	
 	private static Connection createConnection() throws Exception {
@@ -30,9 +29,9 @@ public class JasperReportExecuterTest {
 //				"postgres", 
 //				"postgres");
 		Connection conn = DriverManager.getConnection(
-				"jdbc:postgresql://on-0337-jll.local:5432/sugarcrm", 
-				"postgres", 
-				"postgres");
+				"jdbc:postgresql://dwhdbref01:5432/dwh_vts?charSet=UTF8", 
+				"dwh_vts_owner", 
+				"8d1d66f7c5a263714c79d84dcd70825fb3230766915af9c41d7a214ea78346b4");
 		return conn;
 	}
 	
@@ -129,17 +128,14 @@ public class JasperReportExecuterTest {
 	
 	public static void talendJobTest() throws Exception {
 		
-		JRStyledTextParser.getInstance();
-		
 		de.jlo.talendcomp.jasperreportexec.JasperReportExecuter tJasperReportExec_1 = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
 		try {
 			tJasperReportExec_1
-					.setJrxmlFile("/var/testdata/jasper/shipping_report.jrxml");
+					.setJrxmlFile("/Data/projects/gvl/data/talend/dwh/dwh_vts/artist_report/designs/Kuenstler.jrxml");
 			tJasperReportExec_1.setFixLanguage(false);
 			System.out.println("compile...");
 			tJasperReportExec_1.compileReport();
-			tJasperReportExec_1
-					.setConnection(createConnection());
+			tJasperReportExec_1.setConnection(createConnection());
 		} catch (Exception e) {
 			throw e;
 		}
@@ -156,7 +152,7 @@ public class JasperReportExecuterTest {
 		tJasperReportExec_1
 				.setOutputDir("/var/testdata/jasper/output/");
 		tJasperReportExec_1
-				.setOutputFileNameWithoutExt("shipping_report");
+				.setOutputFileNameWithoutExt("artist_report");
 		tJasperReportExec_1.setOutputFormat("PDF");
 		tJasperReportExec_1.setOverwriteFiles(true);
 		tJasperReportExec_1.setFileTimestampPattern("yyyyMMdd_HHmmss");
@@ -172,10 +168,8 @@ public class JasperReportExecuterTest {
 		tJasperReportExec_1.setPdfKeywords("Talend, Test");
 		tJasperReportExec_1.setPdfVersion("6");
 		// fill parameter if given
-		tJasperReportExec_1.setParameterValue("Country", "USA");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		tJasperReportExec_1.setParameterValue("RequestDate",
-				sdf.parse("1996-08-14"));
+		tJasperReportExec_1.setParameterValue("UUID", "8aabe720-e17e-11e7-818f-5d1146319eed");
+		tJasperReportExec_1.setParameterValue("BUSINESS_PARTNER_ID", 1013l);
 		System.out.println("-----------------");
 		System.out.println("Parameters and values:");
 		Map<String, Object> map = tJasperReportExec_1.getParameterMap();

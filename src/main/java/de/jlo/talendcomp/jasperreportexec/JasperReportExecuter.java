@@ -48,9 +48,11 @@ import net.sf.jasperreports.engine.JREllipse;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRFrame;
 import net.sf.jasperreports.engine.JRGenericElement;
+import net.sf.jasperreports.engine.JRGroup;
 import net.sf.jasperreports.engine.JRImage;
 import net.sf.jasperreports.engine.JRLine;
 import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRPart;
 import net.sf.jasperreports.engine.JRRectangle;
 import net.sf.jasperreports.engine.JRStaticText;
 import net.sf.jasperreports.engine.JRSubreport;
@@ -74,6 +76,7 @@ import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRPptxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory;
+import net.sf.jasperreports.engine.type.SectionTypeEnum;
 import net.sf.jasperreports.engine.util.JRElementsVisitor;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
@@ -109,6 +112,7 @@ import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.export.WriterExporterOutput;
 import net.sf.jasperreports.export.type.PdfVersionEnum;
+import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
 
 public class JasperReportExecuter {
 
@@ -357,6 +361,9 @@ public class JasperReportExecuter {
 		JRXmlLoader loader = new JRXmlLoader(
 					DefaultJasperReportsContext.getInstance(), 
 					JRXmlDigesterFactory.createDigester(DefaultJasperReportsContext.getInstance()));
+		if (jrxmlFile.getName().toLowerCase().endsWith(".jasper")) {
+			jrxmlFile = new File(jrxmlFile.getAbsolutePath().replace(".jasper", ".jrxml"));
+		}
 		if (jrxmlFile.exists() == false) {
 			throw new Exception("jrxml file: " + jrxmlFile.getAbsolutePath() + " does not exist.");
 		}
@@ -421,75 +428,115 @@ public class JasperReportExecuter {
 		if (isMainReport && jasperReport.getQuery() != null) {
 			queryString = jasperReport.getQuery().getText();
 		}
-		// traverse through the report and gather the sub reports to compile them
-		JRElementsVisitor.visitReport(jasperReport, new JRVisitor() {
-
-			@Override
-			public void visitSubreport(JRSubreport subreport) {
-				String expression = subreport
-						.getExpression()
-						.getText();
-				expression = expression.replace(".jasper", ".jrxml");
-				StringTokenizer st = new StringTokenizer(expression, "\"");
-				String subReportPath = null;
-				while (st.hasMoreTokens()) {
-					// take the last part of the name
-					subReportPath = st.nextToken().trim();
-				}
-				try {
-					File test = new File(subReportPath);
-					if (test.isAbsolute()) {
-						// recursive call to compile
-						compileReport(subReportPath, false);
-					} else {
-						// recursive call to compile
-						compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+		if (jasperReport.getSectionType().equals(SectionTypeEnum.BAND)) {
+			// this is a normal report
+			// traverse through the report and gather the sub reports to compile them
+			JRElementsVisitor.visitReport(jasperReport, new JRVisitor() {
+				
+				@Override
+				public void visitSubreport(JRSubreport subreport) {
+					String expression = subreport
+							.getExpression()
+							.getText();
+					expression = expression.replace(".jasper", ".jrxml");
+					StringTokenizer st = new StringTokenizer(expression, "\"");
+					String subReportPath = null;
+					while (st.hasMoreTokens()) {
+						// take the last part of the name
+						subReportPath = st.nextToken().trim();
 					}
-				} catch (Exception e) {
-					compileException = e;
+					try {
+						File test = new File(subReportPath);
+						if (test.isAbsolute()) {
+							// recursive call to compile
+							compileReport(subReportPath, false);
+						} else {
+							// recursive call to compile
+							compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+						}
+					} catch (Exception e) {
+						compileException = e;
+					}
+				}
+
+				@Override
+				public void visitBreak(JRBreak breakElement) {}
+
+				@Override
+				public void visitChart(JRChart chart) {}
+
+				@Override
+				public void visitCrosstab(JRCrosstab crosstab) {}
+
+				@Override
+				public void visitElementGroup(JRElementGroup elementGroup) {}
+
+				@Override
+				public void visitEllipse(JREllipse ellipse) {}
+
+				@Override
+				public void visitFrame(JRFrame frame) {}
+
+				@Override
+				public void visitImage(JRImage image) {}
+
+				@Override
+				public void visitLine(JRLine line) {}
+
+				@Override
+				public void visitRectangle(JRRectangle rectangle) {}
+
+				@Override
+				public void visitStaticText(JRStaticText staticText) {}
+
+				@Override
+				public void visitTextField(JRTextField textField) {}
+
+				@Override
+				public void visitComponentElement(JRComponentElement componentElement) {}
+
+				@Override
+				public void visitGenericElement(JRGenericElement element) {}
+				
+			});
+		} else {
+			// this is a book and a book does not have subreports but SubreportPartComponents
+			JRGroup[] groups = jasperReport.getGroups();
+			for (JRGroup g : groups) {
+				JRPart[] parts = g.getGroupHeaderSection().getParts();
+				if (parts != null) {
+					for (JRPart part : parts) {
+						if (part.getComponent() instanceof SubreportPartComponent) {
+							SubreportPartComponent sr = (SubreportPartComponent) part.getComponent();
+							String expression = sr.getExpression().getText();
+							StringTokenizer st = new StringTokenizer(expression, "\"");
+							String subReportPath = null;
+							while (st.hasMoreTokens()) {
+								// take the last part of the name
+								subReportPath = st.nextToken().trim();
+							}
+							compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+						}
+					}
+				}
+				parts = g.getGroupFooterSection().getParts();
+				if (parts != null) {
+					for (JRPart part : parts) {
+						if (part.getComponent() instanceof SubreportPartComponent) {
+							SubreportPartComponent sr = (SubreportPartComponent) part.getComponent();
+							String expression = sr.getExpression().getText();
+							StringTokenizer st = new StringTokenizer(expression, "\"");
+							String subReportPath = null;
+							while (st.hasMoreTokens()) {
+								// take the last part of the name
+								subReportPath = st.nextToken().trim();
+							}
+							compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+						}
+					}
 				}
 			}
-
-			@Override
-			public void visitBreak(JRBreak breakElement) {}
-
-			@Override
-			public void visitChart(JRChart chart) {}
-
-			@Override
-			public void visitCrosstab(JRCrosstab crosstab) {}
-
-			@Override
-			public void visitElementGroup(JRElementGroup elementGroup) {}
-
-			@Override
-			public void visitEllipse(JREllipse ellipse) {}
-
-			@Override
-			public void visitFrame(JRFrame frame) {}
-
-			@Override
-			public void visitImage(JRImage image) {}
-
-			@Override
-			public void visitLine(JRLine line) {}
-
-			@Override
-			public void visitRectangle(JRRectangle rectangle) {}
-
-			@Override
-			public void visitStaticText(JRStaticText staticText) {}
-
-			@Override
-			public void visitTextField(JRTextField textField) {}
-
-			@Override
-			public void visitComponentElement(JRComponentElement componentElement) {}
-
-			@Override
-			public void visitGenericElement(JRGenericElement element) {}
-			
-		});
+		}
 	}
 
 	private String getJasperFileName(String jrxmlFileName) {

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.jlo.talendcomp</groupId>
 	<artifactId>jlo-talendcomp-jasperreportexec</artifactId>
-	<version>2.7</version>
+	<version>3.0</version>
 	<organization>
 		<name>Jan Lolling</name>
 		<url>http://jan-lolling.de</url>
