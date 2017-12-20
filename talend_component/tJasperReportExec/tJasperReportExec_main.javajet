@@ -47,7 +47,9 @@
 	String pdfVersion = ElementParameterParser.getValue(node, "__PDF_VERSION__");
 	boolean checkParameters = "true".equals(ElementParameterParser.getValue(node, "__CHECK_PARAMETERS__"));
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
+	boolean onlyCompile = "true".equals(ElementParameterParser.getValue(node, "__ONLY_COMPILE__"));
 %>	
+<%	if (onlyCompile == false) { // only compile %>
 	if (<%=cid%>_ok) {
 		String dir = <%=outputDir%>;
 <%  if (createDirs) { %>
@@ -191,3 +193,4 @@
 <%  } %>
 		}
 	}
+<%	} // if (only compile == false) %>

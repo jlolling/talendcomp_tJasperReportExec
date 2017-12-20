@@ -30,6 +30,7 @@
 	String useJavaCompiler = ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__");
 	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
+	boolean onlyCompile = "true".equals(ElementParameterParser.getValue(node, "__ONLY_COMPILE__"));
 %>
 	boolean <%=cid%>_ok = true;
 	globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
@@ -59,6 +60,7 @@
 <%  } %>
     	}
    	}
+<%	if (onlyCompile == false) { %>
 	if (<%=cid%>_ok) {
 	    try {
 <%  if ("DB_CONNECTION".equals(dataSource)) { %>
@@ -78,3 +80,4 @@
 <%  } %>
     	}
    	}
+<%  } // if (onlyCompile == false) %>
