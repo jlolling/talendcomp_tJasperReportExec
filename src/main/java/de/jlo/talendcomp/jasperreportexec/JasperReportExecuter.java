@@ -54,6 +54,7 @@ import net.sf.jasperreports.engine.JRLine;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRPart;
 import net.sf.jasperreports.engine.JRRectangle;
+import net.sf.jasperreports.engine.JRSection;
 import net.sf.jasperreports.engine.JRStaticText;
 import net.sf.jasperreports.engine.JRSubreport;
 import net.sf.jasperreports.engine.JRTextField;
@@ -501,9 +502,9 @@ public class JasperReportExecuter {
 			});
 		} else {
 			// this is a book and a book does not have subreports but SubreportPartComponents
-			JRGroup[] groups = jasperReport.getGroups();
-			for (JRGroup g : groups) {
-				JRPart[] parts = g.getGroupHeaderSection().getParts();
+			JRSection detailSection = jasperReport.getDetailSection();
+			if (detailSection != null) {
+				JRPart[] parts = detailSection.getParts();
 				if (parts != null) {
 					for (JRPart part : parts) {
 						if (part.getComponent() instanceof SubreportPartComponent) {
@@ -519,19 +520,46 @@ public class JasperReportExecuter {
 						}
 					}
 				}
-				parts = g.getGroupFooterSection().getParts();
-				if (parts != null) {
-					for (JRPart part : parts) {
-						if (part.getComponent() instanceof SubreportPartComponent) {
-							SubreportPartComponent sr = (SubreportPartComponent) part.getComponent();
-							String expression = sr.getExpression().getText();
-							StringTokenizer st = new StringTokenizer(expression, "\"");
-							String subReportPath = null;
-							while (st.hasMoreTokens()) {
-								// take the last part of the name
-								subReportPath = st.nextToken().trim();
+			}
+			JRGroup[] groups = jasperReport.getGroups();
+			if (groups != null) {
+				for (JRGroup g : groups) {
+					JRSection groupHeader = g.getGroupHeaderSection();
+					if (groupHeader != null) {
+						JRPart[] parts = groupHeader.getParts();
+						if (parts != null) {
+							for (JRPart part : parts) {
+								if (part.getComponent() instanceof SubreportPartComponent) {
+									SubreportPartComponent sr = (SubreportPartComponent) part.getComponent();
+									String expression = sr.getExpression().getText();
+									StringTokenizer st = new StringTokenizer(expression, "\"");
+									String subReportPath = null;
+									while (st.hasMoreTokens()) {
+										// take the last part of the name
+										subReportPath = st.nextToken().trim();
+									}
+									compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+								}
 							}
-							compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+						}
+					}
+					JRSection footerHeader = g.getGroupFooterSection();
+					if (footerHeader != null) {
+						JRPart[] parts = footerHeader.getParts();
+						if (parts != null) {
+							for (JRPart part : parts) {
+								if (part.getComponent() instanceof SubreportPartComponent) {
+									SubreportPartComponent sr = (SubreportPartComponent) part.getComponent();
+									String expression = sr.getExpression().getText();
+									StringTokenizer st = new StringTokenizer(expression, "\"");
+									String subReportPath = null;
+									while (st.hasMoreTokens()) {
+										// take the last part of the name
+										subReportPath = st.nextToken().trim();
+									}
+									compileReport(currentJrxmlFile.getParent() + "/" + subReportPath, false);
+								}
+							}
 						}
 					}
 				}
