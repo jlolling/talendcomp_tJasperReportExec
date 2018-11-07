@@ -26,6 +26,32 @@
 	if (xmlNumberPattern == null || xmlNumberPattern.isEmpty()) {
 		xmlNumberPattern = "null";
 	}
+	String csvFile = ElementParameterParser.getValue(node, "__CSV_DS_FILE__");
+	String csvCharset = ElementParameterParser.getValue(node, "__CSV_CHARSET__");
+	if (csvCharset == null || csvCharset.isEmpty()) {
+		csvCharset = "null";
+	}
+	String csvDatePattern = ElementParameterParser.getValue(node, "__CSV_DATE_PATTERN__");
+	if (csvDatePattern == null || csvDatePattern.isEmpty()) {
+		csvDatePattern = "null";
+	}
+	String csvNumberPattern = ElementParameterParser.getValue(node, "__CSV_NUMBER_PATTERN__");
+	if (csvNumberPattern == null || csvNumberPattern.isEmpty()) {
+		csvNumberPattern = "null";
+	}
+	String csvRowSeparator = ElementParameterParser.getValue(node, "__CSV_ROW_DELIMITER__");
+	if (csvRowSeparator == null || csvRowSeparator.isEmpty()) {
+		csvRowSeparator = "null";
+	}
+	String csvColSeparator = ElementParameterParser.getValue(node, "__CSV_COL_DELIMITER__");
+	if (csvColSeparator == null || csvColSeparator.isEmpty()) {
+		csvColSeparator = "null";
+	}
+	boolean csvUseHeaderLine = "true".equals(ElementParameterParser.getValue(node, "__CSV_USE_HEADER__"));	
+	String csvColumNames = ElementParameterParser.getValue(node, "__CSV_COLUMN_LIST__");
+	if (csvColumNames == null || csvColumNames.isEmpty()) {
+		csvColumNames = "null";
+	}
 	String jrxmlFile = ElementParameterParser.getValue(node, "__JRXML_FILE__");
 	String useJavaCompiler = ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__");
 	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
@@ -34,21 +60,21 @@
 %>
 	boolean <%=cid%>_ok = true;
 	globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
-    de.jlo.talendcomp.jasperreportexec.JasperReportExecuter <%=cid%> = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
-   	<%=cid%>.setFixLanguage(<%=useJavaCompiler%>);
-    try {
-    	<%=cid%>.setJrxmlFile(<%=jrxmlFile%>);
-    } catch (Exception e) {
+	de.jlo.talendcomp.jasperreportexec.JasperReportExecuter <%=cid%> = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
+   <%=cid%>.setFixLanguage(<%=useJavaCompiler%>);
+	try {
+		<%=cid%>.setJrxmlFile(<%=jrxmlFile%>);
+	} catch (Exception e) {
 		String message = "Setup report design failed: " + e.getMessage();
-	    globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
-	    <%=cid%>_ok = false;
+	   globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
+	   <%=cid%>_ok = false;
 		globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
 <%	if (dieOnError) { %>
 		throw e;
-<%  } %>
-    }
+<% } %>
+   }
 	if (<%=cid%>_ok) {
-	    try {
+	   try {
 			<%=cid%>.compileReport();
     	} catch (Exception e) {
 			String message = "Compile report failed: " + e.getMessage();
@@ -57,27 +83,41 @@
 			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
 <%	if (dieOnError) { %>
 			throw e;
-<%  } %>
+<% } %>
     	}
-   	}
+   }
 <%	if (onlyCompile == false) { %>
 	if (<%=cid%>_ok) {
 	    try {
-<%  if ("DB_CONNECTION".equals(dataSource)) { %>
+<%		if ("DB_CONNECTION".equals(dataSource)) { %>
     		<%=cid%>.setConnection((java.sql.Connection) globalMap.get("conn_" + "<%=connection%>"));
-<%  } else if ("XML_FILE".equals(dataSource)) { %>
-			<%=cid%>.setXmlDataSource(<%=xmlFile%>, <%=xmlSelect%>, <%=xmlDatePattern%>, <%=xmlNumberPattern%>);
-<%  } else if ("DUMMY_DS".equals(dataSource)) { %>
+<%		} else if ("XML_FILE".equals(dataSource)) { %>
+			<%=cid%>.setXmlDataSource(
+				<%=xmlFile%>, 
+				<%=xmlSelect%>, 
+				<%=xmlDatePattern%>, 
+				<%=xmlNumberPattern%>);
+<%		} else if ("CSV_FILE".equals(dataSource)) { %>
+			<%=cid%>.setCsvDataSource(
+				<%=csvFile%>, 
+				<%=csvCharset%>, 
+				<%=csvDatePattern%>, 
+				<%=csvNumberPattern%>, 
+				<%=csvRowSeparator%>, 
+				<%=csvColSeparator%>, 
+				<%=csvUseHeaderLine%>, 
+				<%=csvColumNames%>);
+<%		} else if ("DUMMY_DS".equals(dataSource)) { %>
 			<%=cid%>.setDummyDataSource(<%=numberDummyRecords%>);
-<%  } %>	
+<%		} %>	
     	} catch (Exception e) {
 			String message = "Setup datasoure report failed: " + e.getMessage();
 	    	globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
 	    	<%=cid%>_ok = false;
 			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
-<%	if (dieOnError) { %>
+<%		if (dieOnError) { %>
 			throw e;
-<%  } %>
+<%		} %>
     	}
-   	}
-<%  } // if (onlyCompile == false) %>
+   }
+<%	} // if (onlyCompile == false) %>

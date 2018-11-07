@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.xml.sax.InputSource;
@@ -63,6 +64,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRCsvDataSource;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.HtmlExporter;
@@ -76,6 +78,7 @@ import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRPptxExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.engine.query.JRCsvQueryExecuterFactory;
 import net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory;
 import net.sf.jasperreports.engine.type.SectionTypeEnum;
 import net.sf.jasperreports.engine.util.JRElementsVisitor;
@@ -729,6 +732,8 @@ public class JasperReportExecuter {
 		SimpleCsvExporterConfiguration exportConfiguration = new SimpleCsvExporterConfiguration();
 		exportConfiguration.setFieldDelimiter("|");
 		exportConfiguration.setRecordDelimiter("\n");
+		exportConfiguration.setFieldEnclosure("\"");
+		exportConfiguration.setForceFieldEnclosure(true);
 		exporter.setConfiguration(exportConfiguration);
 		SimpleCsvReportConfiguration reportConfiguration = new SimpleCsvReportConfiguration();
 		exporter.setConfiguration(reportConfiguration);
@@ -1101,6 +1106,53 @@ public class JasperReportExecuter {
 	 */
 	public void setDummyDataSource(int numberRecords) {
 		jrDataSource = new DummyDataSource(numberRecords);
+	}
+	
+	/**
+	 * Creates a CSV data source
+	 * @param filePath the path to the data file
+	 * @param charset charset of the file
+	 * @param useCsvQuery use the CSV query language in the report
+	 * @param datePattern pattern of the date/time values in case of null the default "yyyy-MM-dd HH:mm:ss" will be used 
+	 * @param numberPattern pattern of the numbers in case of null the default "##0.###" will be used
+	 * @param rowSeparator separator of the rows
+	 * @param fieldDelimiter delimiter of the fields
+	 * @param firstRowIsHeader if true the columns with detected from the header row
+	 * @param fieldList String containing the fields separated by ; or the fieldDelimiter
+	 * @throws Exception
+	 */
+	public void setCsvDataSource(String filePath, String charset, String datePattern, String numberPattern, String rowSeparator, String fieldDelimiter, boolean firstRowIsHeader, String fieldList) throws Exception {
+		if (firstRowIsHeader && (fieldList == null || fieldList.trim().isEmpty())) {
+			throw new Exception("Column detection by header or is off. Now the CSV field list cannot be null or empty!");
+		}
+		if (charset == null) {
+			charset = "UTF-8";
+		}
+		if (datePattern == null || datePattern.trim().isEmpty()) {
+			datePattern = "yyyy-MM-dd HH:mm:ss.SSS";
+		}
+		if (numberPattern == null || numberPattern.trim().isEmpty()) {
+			numberPattern = "##0.###";
+		}
+		if (fieldDelimiter == null || fieldDelimiter.trim().isEmpty()) {
+			fieldDelimiter = ";";
+		}
+		File file = new File(filePath);
+		if (file.canRead() == false) {
+			throw new Exception("CSV File:" + file.getAbsolutePath() + " cannot be read or does not exist.");
+		}
+		JRCsvDataSource csvDs = new JRCsvDataSource(file, charset);
+		csvDs.setDatePattern(datePattern);
+		csvDs.setFieldDelimiter(fieldDelimiter.charAt(0));
+		csvDs.setNumberPattern(numberPattern);
+		if (firstRowIsHeader) {
+			csvDs.setUseFirstRowAsHeader(firstRowIsHeader);
+		} else {
+			String[] columnNames = fieldList.split(Pattern.quote(fieldDelimiter));
+			csvDs.setColumnNames(columnNames);
+		}
+		parameterMap.put(JRCsvQueryExecuterFactory.CSV_FILE, file);
+		jrDataSource = csvDs;
 	}
 	
 	/**
