@@ -952,7 +952,7 @@ public class JasperReportExecuter {
 	 * @param parameterName
 	 * @param valuesAsString
 	 *            single value as string
-	 * @param dataType
+	 * @param targetDataType
 	 *            the data type of the parameter (the string values will be
 	 *            converted into this type)
 	 * @param pattern
@@ -962,11 +962,11 @@ public class JasperReportExecuter {
 	public void setAndConvertParameterValue(
 			String parameterName,
 			Object value, 
-			String dataType, 
+			String targetDataType, 
 			String pattern)
 			throws Exception {
 		parameterMap.put(parameterName,
-				Util.convertToDatatype(value, dataType, pattern));
+				Util.convertToDatatype(value, targetDataType, pattern));
 	}
 
 	public Object getParameterValue(String parameterName) {

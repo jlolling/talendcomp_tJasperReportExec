@@ -45,7 +45,7 @@ public class Util {
 	public static Object convertToDatatype(Object value, String targetDataType, String pattern) throws Exception {
 		if (value != null) {
 			if ("String".equalsIgnoreCase(targetDataType)) {
-				return value;
+				return convertToString(value, pattern);
 			} else if ("BigDecimal".equalsIgnoreCase(targetDataType)) {
 				return convertToBigDecimal(value);
 			} else if ("Boolean".equalsIgnoreCase(targetDataType)) {
