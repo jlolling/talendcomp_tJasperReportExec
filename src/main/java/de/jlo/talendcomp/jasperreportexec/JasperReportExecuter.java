@@ -961,12 +961,12 @@ public class JasperReportExecuter {
 	 */
 	public void setAndConvertParameterValue(
 			String parameterName,
-			Object valueAsString, 
+			Object value, 
 			String dataType, 
 			String pattern)
 			throws Exception {
 		parameterMap.put(parameterName,
-				Util.convertToDatatype(String.valueOf(valueAsString), dataType, pattern));
+				Util.convertToDatatype(value, dataType, pattern));
 	}
 
 	public Object getParameterValue(String parameterName) {

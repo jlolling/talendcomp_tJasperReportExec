@@ -42,34 +42,48 @@ public class Util {
 		return resultList;
 	}
 	
-	public static Object convertToDatatype(String value, String dataType, String pattern) throws Exception {
-		if (value != null && value.isEmpty() == false) {
-			if ("String".equalsIgnoreCase(dataType)) {
+	public static Object convertToDatatype(Object value, String targetDataType, String pattern) throws Exception {
+		if (value != null) {
+			if ("String".equalsIgnoreCase(targetDataType)) {
 				return value;
-			} else if ("BigDecimal".equalsIgnoreCase(dataType)) {
+			} else if ("BigDecimal".equalsIgnoreCase(targetDataType)) {
 				return convertToBigDecimal(value);
-			} else if ("Boolean".equalsIgnoreCase(dataType)) {
+			} else if ("Boolean".equalsIgnoreCase(targetDataType)) {
 				return convertToBoolean(value);
-			} else if ("Date".equalsIgnoreCase(dataType)) {
+			} else if ("Date".equalsIgnoreCase(targetDataType)) {
 				return convertToDate(value, pattern);
-			} else if ("Double".equalsIgnoreCase(dataType)) {
+			} else if ("Double".equalsIgnoreCase(targetDataType)) {
 				return convertToDouble(value);
-			} else if ("Float".equalsIgnoreCase(dataType)) {
+			} else if ("Float".equalsIgnoreCase(targetDataType)) {
 				return convertToFloat(value);
-			} else if ("Int".equalsIgnoreCase(dataType) || "Integer".equalsIgnoreCase(dataType)) {
+			} else if ("Int".equalsIgnoreCase(targetDataType) || "Integer".equalsIgnoreCase(targetDataType)) {
 				return convertToInteger(value);
-			} else if ("Long".equalsIgnoreCase(dataType)) {
+			} else if ("Long".equalsIgnoreCase(targetDataType)) {
 				return convertToLong(value);
-			} else if ("Short".equalsIgnoreCase(dataType)) {
+			} else if ("Short".equalsIgnoreCase(targetDataType)) {
 				return convertToShort(value);
-			} else if ("Timestamp".equalsIgnoreCase(dataType)) {
+			} else if ("Timestamp".equalsIgnoreCase(targetDataType)) {
 				return convertToTimestamp(value, pattern);
 			} else {
-				throw new Exception("Unsupported dataType:" + dataType);
+				throw new Exception("Unsupported dataType:" + targetDataType);
 			}
 		} else {
 			return null;
 		}
+	}
+	
+	public static String convertToString(Object value, String pattern) {
+		String s = null;
+		if (value instanceof String) {
+			return (String) value;
+		} else if (value instanceof Number) {
+			return NumberFormat.getInstance().format(value);
+		} else if (value instanceof Date) {
+			return new SimpleDateFormat(pattern).format((Date) value);
+		} else if (value != null) {
+			return String.valueOf(value);
+		}
+		return s;
 	}
 	
 	/**
@@ -78,23 +92,28 @@ public class Util {
 	 * @param pattern
 	 * @return the resulting Date
 	 */
-	public static Date convertToDate(String dateString, String pattern) throws Exception {
-		if (dateString == null || dateString.isEmpty()) {
+	public static Date convertToDate(Object value, String pattern) throws Exception {
+		if (value == null) {
 			return null;
-		}
-		if (pattern == null || pattern.isEmpty()) {
-			throw new Exception("convertToDate failed: pattern cannot be null or empty");
-		}
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-			return sdf.parse(dateString);
-		} catch (Throwable t) {
-			throw new Exception("Failed to convert string to date:" + t.getMessage(), t);
+		} else if (value instanceof String) {
+			if (pattern == null || pattern.isEmpty()) {
+				throw new Exception("convertToDate failed: pattern cannot be null or empty");
+			}
+			try {
+				SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+				return sdf.parse((String) value);
+			} catch (Throwable t) {
+				throw new Exception("Failed to convert string to date:" + t.getMessage(), t);
+			}
+		} else if (value instanceof Date) {
+			return (Date) value;
+		} else {
+			throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to Date");
 		}
 	}
 	
-	public static Timestamp convertToTimestamp(String dateString, String pattern) throws Exception {
-		Date date = convertToDate(dateString, pattern);
+	public static Timestamp convertToTimestamp(Object value, String pattern) throws Exception {
+		Date date = convertToDate(value, pattern);
 		if (date != null) {
 			return new Timestamp(date.getTime());
 		} else {
@@ -102,67 +121,112 @@ public class Util {
 		}
 	}
 
-	public static Boolean convertToBoolean(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
+	public static Boolean convertToBoolean(Object value) throws Exception {
+		if (value == null) {
 			return null;
 		} else {
-			if ("true".equals(value)) {
-				return true;
-			} else if ("false".equals(value)) {
-				return false;
+			if (value instanceof Boolean) {
+				return (Boolean) value;
+			} else if (value instanceof String) {
+				if ("true".equals(value)) {
+					return true;
+				} else if ("false".equals(value)) {
+					return false;
+				} else {
+					throw new Exception("Value:" + value + " is not a boolean value!");
+				}
 			} else {
 				throw new Exception("Value:" + value + " is not a boolean value!");
 			}
 		}
 	}
 
-	public static Double convertToDouble(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
+	public static Double convertToDouble(Object value) throws Exception {
+		if (value == null) {
 			return null;
+		} else if (value instanceof Number) {
+			return ((Number) value).doubleValue();
+		} else if (value instanceof String) {
+			NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+			return nf.parse((String) value).doubleValue();
+		} else {
+			throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to Double");
 		}
-		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-		return nf.parse(value).doubleValue();
 	}
 
-	public static Integer convertToInteger(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
+	public static Float convertToFloat(Object value) throws Exception {
+		if (value == null) {
 			return null;
+		} else if (value instanceof Number) {
+			return ((Number) value).floatValue();
+		} else if (value instanceof String) {
+			NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+			return nf.parse((String) value).floatValue();
+		} else {
+			throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to Float");
 		}
-		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-		return nf.parse(value).intValue();
 	}
 	
-	public static Float convertToFloat(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
+	public static Integer convertToInteger(Object value) throws Exception {
+		if (value == null) {
 			return null;
+		} else if (value instanceof Number) {
+			return ((Number) value).intValue();
+		} else if (value instanceof String) {
+			NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+			return nf.parse((String) value).intValue();
+		} else {
+			throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to Integer");
 		}
-		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-		return nf.parse(value).floatValue();
 	}
 
-	public static Short convertToShort(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
+	public static Short convertToShort(Object value) throws Exception {
+		if (value == null) {
 			return null;
+		} else if (value instanceof Number) {
+			return ((Number) value).shortValue();
+		} else if (value instanceof String) {
+			NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+			return nf.parse((String) value).shortValue();
+		} else {
+			throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to Short");
 		}
-		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-		return nf.parse(value).shortValue();
 	}
 
-	public static Long convertToLong(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
+	public static Long convertToLong(Object value) throws Exception {
+		if (value == null) {
 			return null;
+		} else if (value instanceof Long) {
+			return (Long) value;
+		} else if (value instanceof Number) {
+			return ((Number) value).longValue();
+		} else if (value instanceof String) {
+			NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+			return nf.parse((String) value).longValue();
+		} else {
+			throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to Long");
 		}
-		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
-		return nf.parse(value).longValue();
 	}
 
-	public static BigDecimal convertToBigDecimal(String value) throws Exception {
-		if (value == null || value.isEmpty()) {
-			return null;
-		}
+	public static BigDecimal convertToBigDecimal(Object value) throws Exception {
 		try {
-			return new BigDecimal(value);
-		} catch (RuntimeException e) {
+			if (value == null) {
+				return null;
+			} else if (value instanceof BigDecimal) {
+				return (BigDecimal) value;
+			} else if (value instanceof Long) {
+				return new BigDecimal((Long) value);
+			} else if (value instanceof Integer) {
+				return new BigDecimal((Integer) value);
+			} else if (value instanceof String) {
+				if (((String) value).isEmpty()) {
+					return null;
+				}
+				return new BigDecimal((String) value);
+			} else {
+				throw new Exception("Type: " + value.getClass().getName() + " cannot be converted to BigDecimal");
+			}
+		} catch (Throwable e) {
 			throw new Exception("convertToBigDecimal:" + value + " failed:" + e.getMessage(), e);
 		}
 	}
