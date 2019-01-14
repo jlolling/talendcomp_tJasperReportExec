@@ -45,6 +45,14 @@
 	String pdfSubject = ElementParameterParser.getValue(node, "__PDF_SUBJECT__");
 	String pdfKeywords = ElementParameterParser.getValue(node, "__PDF_KEYWORDS__");
 	String pdfVersion = ElementParameterParser.getValue(node, "__PDF_VERSION__");
+	String pdfAconformance = ElementParameterParser.getValue(node, "__PDF_A_CONFORMANCE__");
+	if (pdfAconformance == null || pdfAconformance.trim().isEmpty()) {
+		pdfAconformance = "null";
+	}
+	String iccProfilePath = ElementParameterParser.getValue(node, "__ICC_PROFILE_PATH__");
+	if (iccProfilePath == null || iccProfilePath.trim().isEmpty()) {
+		iccProfilePath = "null";
+	}
 	boolean checkParameters = "true".equals(ElementParameterParser.getValue(node, "__CHECK_PARAMETERS__"));
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
 	boolean onlyCompile = "true".equals(ElementParameterParser.getValue(node, "__ONLY_COMPILE__"));
@@ -115,7 +123,9 @@
 <%		if (pdfKeywords != null && pdfKeywords.trim().isEmpty() == false) { %>
 	<%=cid%>.setPdfKeywords(<%=pdfKeywords%>);
 <%		} %>
-	<%=cid%>.setPdfVersion("<%=pdfVersion%>");	
+	<%=cid%>.setPdfVersion("<%=pdfVersion%>");
+	<%=cid%>.setPdfaConformance("<%=pdfAconformance%>");
+	<%=cid%>.setIccProfilePath(<%=iccProfilePath%>);
 <%  } %>
 <%
     @SuppressWarnings("unchecked")

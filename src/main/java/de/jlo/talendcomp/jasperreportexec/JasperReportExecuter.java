@@ -116,6 +116,7 @@ import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.export.WriterExporterOutput;
 import net.sf.jasperreports.export.type.PdfVersionEnum;
+import net.sf.jasperreports.export.type.PdfaConformanceEnum;
 import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
 
 public class JasperReportExecuter {
@@ -157,6 +158,8 @@ public class JasperReportExecuter {
 	private String pdfSubject = null;
 	private String pdfTitle = null;
 	private String pdfVersion = null;
+	private PdfaConformanceEnum pdfaConformanceEnum = null;
+	private String iccProfilePath = null;
 	private int numberReportPages = 0;
 	private boolean fixLanguage = false;
 	private String queryString = null;
@@ -667,6 +670,10 @@ public class JasperReportExecuter {
 		}
 		if (pdfVersion != null) {
 			exportConfiguration.setPdfVersion(PdfVersionEnum.getByName(pdfVersion));
+		}
+		if (pdfaConformanceEnum != null) {
+			exportConfiguration.setPdfaConformance(pdfaConformanceEnum);
+			exportConfiguration.setIccProfilePath(iccProfilePath);
 		}
 		exporter.setConfiguration(exportConfiguration);
 		// report configuration
@@ -1218,6 +1225,36 @@ public class JasperReportExecuter {
 
 	public void setReportProperty(String propName, String value) {
 		mainJasperReport.setProperty(propName, value);
+	}
+
+	public String getPdfaConformance() {
+		if (pdfaConformanceEnum != null) {
+			return pdfaConformanceEnum.getName();
+		} else {
+			return null;
+		}
+	}
+
+	public void setPdfaConformance(String pdfaConformance) {
+		this.pdfaConformanceEnum = null;
+		if (pdfaConformance != null && pdfaConformance.trim().isEmpty() == false) {
+			this.pdfaConformanceEnum = PdfaConformanceEnum.getByName(pdfaConformance);
+			if (this.pdfaConformanceEnum == null) {
+				throw new IllegalArgumentException("Invalid value for PDF/A conformance: " + pdfaConformance);
+			}
+		}
+	}
+
+	public String getIccProfilePath() {
+		return iccProfilePath;
+	}
+
+	public void setIccProfilePath(String iccProfilePath) {
+		if (iccProfilePath != null && iccProfilePath.trim().isEmpty() == false) {
+			this.iccProfilePath = iccProfilePath;
+		} else {
+			this.iccProfilePath = null;
+		}
 	}
 	
 }
