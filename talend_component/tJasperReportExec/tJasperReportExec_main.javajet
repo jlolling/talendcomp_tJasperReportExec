@@ -53,6 +53,10 @@
 	if (iccProfilePath == null || iccProfilePath.trim().isEmpty()) {
 		iccProfilePath = "null";
 	}
+	String defaultPdfFontResource = ElementParameterParser.getValue(node, "__DEFAULT_EMBEDDED_PDF_FONT_RESOURCE__");
+	if (defaultPdfFontResource == null || defaultPdfFontResource.trim().isEmpty()) {
+		defaultPdfFontResource = "null";
+	}
 	boolean checkParameters = "true".equals(ElementParameterParser.getValue(node, "__CHECK_PARAMETERS__"));
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
 	boolean onlyCompile = "true".equals(ElementParameterParser.getValue(node, "__ONLY_COMPILE__"));
@@ -125,7 +129,8 @@
 <%		} %>
 	<%=cid%>.setPdfVersion("<%=pdfVersion%>");
 	<%=cid%>.setPdfaConformance("<%=pdfAconformance%>");
-	<%=cid%>.setIccProfilePath(<%=iccProfilePath%>);
+	<%=cid%>.setIccProfilePath(<%=iccProfilePath%>); 
+	<%=cid%>.setDefaultPdfFontResourcePath(<%=defaultPdfFontResource%>); 
 <%  } %>
 <%
     @SuppressWarnings("unchecked")

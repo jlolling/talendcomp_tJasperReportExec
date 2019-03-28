@@ -1,6 +1,4 @@
 /**
- * Copyright 2015 Jan Lolling jan.lolling@gmail.com
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -160,6 +158,7 @@ public class JasperReportExecuter {
 	private String pdfVersion = null;
 	private PdfaConformanceEnum pdfaConformanceEnum = null;
 	private String iccProfilePath = null;
+	private String defaultPdfFontResourcePath = "net/sf/jasperreports/fonts/dejavu/DejaVuSans.ttf";
 	private int numberReportPages = 0;
 	private boolean fixLanguage = false;
 	private String queryString = null;
@@ -672,6 +671,9 @@ public class JasperReportExecuter {
 			exportConfiguration.setPdfVersion(PdfVersionEnum.getByName(pdfVersion));
 		}
 		if (pdfaConformanceEnum != null) {
+			// setup the context to embed the PDF/A fonts
+			DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.default.pdf.font.name", defaultPdfFontResourcePath);
+			DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
 			exportConfiguration.setPdfaConformance(pdfaConformanceEnum);
 			exportConfiguration.setIccProfilePath(iccProfilePath);
 		}
@@ -1254,6 +1256,16 @@ public class JasperReportExecuter {
 			this.iccProfilePath = iccProfilePath;
 		} else {
 			this.iccProfilePath = null;
+		}
+	}
+
+	public String getDefaultPdfFontResourcePath() {
+		return defaultPdfFontResourcePath;
+	}
+
+	public void setDefaultPdfFontResourcePath(String defaultPdfFontPath) {
+		if (defaultPdfFontPath != null && defaultPdfFontPath.trim().isEmpty() == false) {
+			this.defaultPdfFontResourcePath = defaultPdfFontPath;
 		}
 	}
 	
