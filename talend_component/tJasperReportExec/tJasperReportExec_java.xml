@@ -185,7 +185,7 @@
       <DEFAULT/> 
     </PARAMETER>  
     <PARAMETER NAME="PDF_CREATOR" FIELD="TEXT" NUM_ROW="50" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
-      <DEFAULT>"TIPCO JasperReports and Talend | Job: " + jobName</DEFAULT> 
+      <DEFAULT>"TIBCO JasperReports and Talend | Job: " + jobName</DEFAULT> 
     </PARAMETER>  
     <PARAMETER NAME="PDF_TITLE" FIELD="TEXT" NUM_ROW="60" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
       <DEFAULT/> 

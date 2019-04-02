@@ -206,7 +206,7 @@ public class JasperReportExecuter {
 		}
 	}
 	
-	private void retrieveJRParameter() throws JRException {
+	private void retrieveJRParameter() throws Exception {
 		if (mainJasperReport == null) {
 			mainJasperReport = (JasperReport) JRLoader.loadObjectFromFile(getJasperFileName(mainJrxmlFile.getAbsolutePath()));
 		}
@@ -572,8 +572,11 @@ public class JasperReportExecuter {
 		}
 	}
 
-	private String getJasperFileName(String jrxmlFileName) {
+	private String getJasperFileName(String jrxmlFileName) throws Exception {
 		int pos = jrxmlFileName.lastIndexOf('.');
+		if (pos == -1) {
+			throw new Exception("Invalid jrxml-file name (missing file extension): " + jrxmlFileName);
+		}
 		return jrxmlFileName.substring(0, pos) + ".jasper";
 	}
 
