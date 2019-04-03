@@ -1,5 +1,5 @@
 # Talend Component tJasperReportExec
-This component can run a JasperReport inside a Talend Job.
+This component runs a JasperReport inside a Talend Job.
 * Can handle report parameters
 * Can use database connections as data source
 * Can check the given parameters against the report parameters
