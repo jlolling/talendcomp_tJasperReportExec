@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <COMPONENT> 
-  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="5.1" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20190328" STARTABLE="true"> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="5.2" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20191029" STARTABLE="true"> 
     <SIGNATURE/> 
   </HEADER>  
   <FAMILIES> 
@@ -228,49 +228,48 @@
     <PARAMETER NAME="DIE_ON_ERROR" FIELD="CHECK" NUM_ROW="130"> 
       <DEFAULT>true</DEFAULT> 
     </PARAMETER>  
-    <PARAMETER NAME="RELEASE_LABEL_20190328" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
-      <DEFAULT>Release: 5.1 build at: 20190328</DEFAULT>
+    <PARAMETER NAME="RELEASE_LABEL_20191029" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 5.2 build at: 20191029</DEFAULT>
     </PARAMETER>
   </ADVANCED_PARAMETERS>  
   <CODEGENERATION> 
     <IMPORTS> 
-      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-5.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.0.0.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-io" MODULE="commons-io-1.3.2.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-compress" MODULE="commons-compress-1.9.jar" REQUIRED="true"/>
-      <IMPORT NAME="joda-time" MODULE="joda-time-2.9.9.jar" REQUIRED="true"/>
-      <IMPORT NAME="groovy" MODULE="groovy-2.4.11.jar" REQUIRED="true"/>
-      <IMPORT NAME="poi-ooxml" MODULE="poi-ooxml-3.17.jar" REQUIRED="true"/>
-      <IMPORT NAME="poi" MODULE="poi-3.17.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-codec" MODULE="commons-codec-1.10.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-collections4" MODULE="commons-collections4-4.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="poi-ooxml-schemas" MODULE="poi-ooxml-schemas-3.17.jar" REQUIRED="true"/>
-      <IMPORT NAME="xmlbeans" MODULE="xmlbeans-2.6.0.jar" REQUIRED="true"/>
-      <IMPORT NAME="curvesapi" MODULE="curvesapi-1.04.jar" REQUIRED="true"/>
-      <IMPORT NAME="xalan" MODULE="xalan-2.7.2.jar" REQUIRED="true"/>
-      <IMPORT NAME="serializer" MODULE="serializer-2.7.2.jar" REQUIRED="true"/>
-      <IMPORT NAME="pdf-renderer" MODULE="pdf-renderer-1.0.5.jar" REQUIRED="true"/>
-      <IMPORT NAME="bcprov-jdk16" MODULE="bcprov-jdk16-1.46.jar" REQUIRED="true"/>
-      <IMPORT NAME="bctsp-jdk16" MODULE="bctsp-jdk16-1.46.jar" REQUIRED="true"/>
-      <IMPORT NAME="dom4j" MODULE="dom4j-1.6.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.7.0.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.3.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-digester" MODULE="commons-digester-2.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="itext" MODULE="itext-2.1.7.js6.jar" REQUIRED="true"/>
-      <IMPORT NAME="bcprov-jdk15on" MODULE="bcprov-jdk15on-1.52.jar" REQUIRED="true"/>
-      <IMPORT NAME="jcommon" MODULE="jcommon-1.0.23.jar" REQUIRED="true"/>
-      <IMPORT NAME="jfreechart" MODULE="jfreechart-1.0.19.jar" REQUIRED="true"/>
-      <IMPORT NAME="ecj" MODULE="ecj-4.4.2.jar" REQUIRED="true"/>
-      <IMPORT NAME="castor-xml" MODULE="castor-xml-1.3.3.jar" REQUIRED="true"/>
-      <IMPORT NAME="castor-core" MODULE="castor-core-1.3.3.jar" REQUIRED="true"/>
-      <IMPORT NAME="commons-lang" MODULE="commons-lang-2.6.jar" REQUIRED="true"/>
-      <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.9.5.jar" REQUIRED="true"/>
-      <IMPORT NAME="icu4j" MODULE="icu4j-57.1.jar" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.7.0.jar" REQUIRED="true"/>
-      <IMPORT NAME="spring-core" MODULE="spring-core-3.2.4.RELEASE.jar" REQUIRED="true"/>
-      <IMPORT NAME="spring-beans" MODULE="spring-beans-3.2.4.RELEASE.jar" REQUIRED="true"/>
+      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-5.2.jar" MVN="mvn:org.talend.libraries/jlo-talendcomp-jasperreportexec-5.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.0.0.jar" MVN="mvn:org.talend.libraries/jasperreports-fonts-6.0.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-io" MODULE="commons-io-1.3.2.jar" MVN="mvn:org.talend.libraries/commons-io-1.3.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-compress" MODULE="commons-compress-1.9.jar" MVN="mvn:org.talend.libraries/commons-compress-1.9/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="joda-time" MODULE="joda-time-2.9.9.jar" MVN="mvn:org.talend.libraries/joda-time-2.9.9/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="groovy" MODULE="groovy-2.4.11.jar" MVN="mvn:org.talend.libraries/groovy-2.4.11/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="poi-ooxml" MODULE="poi-ooxml-3.17.jar" MVN="mvn:org.talend.libraries/poi-ooxml-3.17/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="poi" MODULE="poi-3.17.jar" MVN="mvn:org.talend.libraries/poi-3.17/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-codec" MODULE="commons-codec-1.10.jar" MVN="mvn:org.talend.libraries/commons-codec-1.10/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="poi-ooxml-schemas" MODULE="poi-ooxml-schemas-3.17.jar" MVN="mvn:org.talend.libraries/poi-ooxml-schemas-3.17/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="xmlbeans" MODULE="xmlbeans-2.6.0.jar" MVN="mvn:org.talend.libraries/xmlbeans-2.6.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="curvesapi" MODULE="curvesapi-1.04.jar" MVN="mvn:org.talend.libraries/curvesapi-1.04/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="xalan" MODULE="xalan-2.7.2.jar" MVN="mvn:org.talend.libraries/xalan-2.7.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="serializer" MODULE="serializer-2.7.2.jar" MVN="mvn:org.talend.libraries/serializer-2.7.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="pdf-renderer" MODULE="pdf-renderer-1.0.5.jar" MVN="mvn:org.talend.libraries/pdf-renderer-1.0.5/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcprov-jdk16" MODULE="bcprov-jdk16-1.46.jar" MVN="mvn:org.talend.libraries/bcprov-jdk16-1.46/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bctsp-jdk16" MODULE="bctsp-jdk16-1.46.jar" MVN="mvn:org.talend.libraries/bctsp-jdk16-1.46/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="dom4j" MODULE="dom4j-1.6.1.jar" MVN="mvn:org.talend.libraries/dom4j-1.6.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.10.0.jar" MVN="mvn:org.talend.libraries/jasperreports-6.10.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.3.jar" MVN="mvn:org.talend.libraries/commons-beanutils-1.9.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" MVN="mvn:org.talend.libraries/commons-collections-3.2.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-digester" MODULE="commons-digester-2.1.jar" MVN="mvn:org.talend.libraries/commons-digester-2.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" MVN="mvn:org.talend.libraries/commons-logging-1.1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-collections4" MODULE="commons-collections4-4.2.jar" MVN="mvn:org.talend.libraries/commons-collections4-4.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="itext" MODULE="itext-2.1.7.js7.jar" MVN="mvn:org.talend.libraries/itext-2.1.7.js7/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcprov-jdk15on" MODULE="bcprov-jdk15on-1.62.jar" MVN="mvn:org.talend.libraries/bcprov-jdk15on-1.62/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jcommon" MODULE="jcommon-1.0.23.jar" MVN="mvn:org.talend.libraries/jcommon-1.0.23/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jfreechart" MODULE="jfreechart-1.0.19.jar" MVN="mvn:org.talend.libraries/jfreechart-1.0.19/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="ecj" MODULE="ecj-4.4.2.jar" MVN="mvn:org.talend.libraries/ecj-4.4.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="castor-xml" MODULE="castor-xml-1.4.1.jar" MVN="mvn:org.talend.libraries/castor-xml-1.4.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="castor-core" MODULE="castor-core-1.4.1.jar" MVN="mvn:org.talend.libraries/castor-core-1.4.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-lang3" MODULE="commons-lang3-3.4.jar" MVN="mvn:org.talend.libraries/commons-lang3-3.4/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.9.9.jar" MVN="mvn:org.talend.libraries/jackson-databind-2.9.9/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.10.0.jar" MVN="mvn:org.talend.libraries/jasperreports-functions-6.10.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="spring-core" MODULE="spring-core-3.2.4.RELEASE.jar" MVN="mvn:org.talend.libraries/spring-core-3.2.4.RELEASE/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="spring-beans" MODULE="spring-beans-3.2.4.RELEASE.jar" MVN="mvn:org.talend.libraries/spring-beans-3.2.4.RELEASE/6.0.0-SNAPSHOT" REQUIRED="true"/>
     </IMPORTS> 
   </CODEGENERATION>  
   <RETURNS> 
