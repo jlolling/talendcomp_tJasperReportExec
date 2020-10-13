@@ -17,9 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -165,7 +163,17 @@ public class JasperReportExecuter {
 	private List<JRParameter> listJRParameters = null;
 	private boolean printJRParameters = false;
 	private boolean replaceJrxmlRef = true;
+	private static final Object lock = new Object();
+	private static ReportResourceClassLoader resourceClassLoader;
 
+	public JasperReportExecuter() {
+		synchronized(lock) {
+			if (resourceClassLoader == null) {
+				resourceClassLoader = new ReportResourceClassLoader(new URL[0], this.getClass().getClassLoader());
+			}
+		}
+	}
+	
 	public String getOutputDir() {
 		return outputDir;
 	}
@@ -397,8 +405,8 @@ public class JasperReportExecuter {
 		try {
 			addPathToClasspath(baseDir);
 		} catch (Exception e) {
-			String message = "Failed to add dir " + baseDir.getAbsolutePath()
-					+ " to classpath." + e.getMessage();
+			String message = "Failed to add dir: " + baseDir.getAbsolutePath()
+					+ " to classpath. Message: " + e.getMessage();
 			throw new Exception(message, e);
 		}
 		final File currentJrxmlFile = new File(jrxmlFilePath);
@@ -1100,16 +1108,9 @@ public class JasperReportExecuter {
 		this.fixLanguage = fixLanguage;
 	}
 
-	private static void addPathToClasspath(File dir) throws Exception {
+	private void addPathToClasspath(File dir) throws Exception {		
 		URL url = dir.toURI().toURL();
-		URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader
-				.getSystemClassLoader();
-		Class<?> urlClass = URLClassLoader.class;
-		Method method = urlClass.getDeclaredMethod(
-				"addURL",
-				new Class[] { URL.class }); // already existing URLs will be ignored
-		method.setAccessible(true);
-		method.invoke(urlClassLoader, new Object[] { url });
+		resourceClassLoader.addURL(url);
 	}
 	
 	/**
