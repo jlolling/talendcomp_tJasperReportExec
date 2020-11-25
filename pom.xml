@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.jlo.talendcomp</groupId>
 	<artifactId>jlo-talendcomp-jasperreportexec</artifactId>
+	<version>6.1</version>
 	<organization>
 		<name>Jan Lolling</name>
 		<url>http://jan-lolling.de</url>
@@ -23,7 +24,7 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.15.0</version>
+			<version>6.16.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>stax-api</artifactId>
@@ -118,12 +119,12 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-functions</artifactId>
-			<version>6.15.0</version>
+			<version>6.16.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-fonts</artifactId>
-			<version>6.15.0</version>
+			<version>6.16.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -201,11 +202,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>3.2.4.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>3.2.4.RELEASE</version>
 		</dependency>
@@ -240,5 +236,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<version>6.0</version>
 </project>

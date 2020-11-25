@@ -164,12 +164,13 @@ public class JasperReportExecuter {
 	private boolean printJRParameters = false;
 	private boolean replaceJrxmlRef = true;
 	private static final Object lock = new Object();
-	private static ReportResourceClassLoader resourceClassLoader;
+	private ReportResourceClassLoader resourceClassLoader;
 
 	public JasperReportExecuter() {
 		synchronized(lock) {
 			if (resourceClassLoader == null) {
 				resourceClassLoader = new ReportResourceClassLoader(new URL[0], this.getClass().getClassLoader());
+				Thread.currentThread().setContextClassLoader(resourceClassLoader);
 			}
 		}
 	}
@@ -442,7 +443,7 @@ public class JasperReportExecuter {
 		if (isMainReport && jasperReport.getQuery() != null) {
 			queryString = jasperReport.getQuery().getText();
 		}
-		if (jasperReport.getSectionType().equals(SectionTypeEnum.BAND)) {
+		if (SectionTypeEnum.BAND.equals(jasperReport.getSectionType())) {
 			// this is a normal report
 			// traverse through the report and gather the sub reports to compile them
 			JRElementsVisitor.visitReport(jasperReport, new JRVisitor() {
