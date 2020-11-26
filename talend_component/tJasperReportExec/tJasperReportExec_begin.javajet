@@ -57,11 +57,13 @@
 	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
 	boolean onlyCompile = "true".equals(ElementParameterParser.getValue(node, "__ONLY_COMPILE__"));
+	boolean useDesignCaching = "true".equals(ElementParameterParser.getValue(node, "__USE_CACHING__"));
 %>
 	boolean <%=cid%>_ok = true;
 	globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
 	de.jlo.talendcomp.jasperreportexec.JasperReportExecuter <%=cid%> = new de.jlo.talendcomp.jasperreportexec.JasperReportExecuter();
    <%=cid%>.setFixLanguage(<%=useJavaCompiler%>);
+   <%=cid%>.setUseDesignCaching(<%=useDesignCaching%>);
 	try {
 		<%=cid%>.setJrxmlFile(<%=jrxmlFile%>);
 	} catch (Exception e) {

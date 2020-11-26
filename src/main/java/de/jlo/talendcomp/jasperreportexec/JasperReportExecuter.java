@@ -118,7 +118,9 @@ import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
 public class JasperReportExecuter {
 
 	private static final HashMap<String, JasperReport> reportMap = new HashMap<String, JasperReport>();
+	private static final HashMap<String, JasperDesign> designMap = new HashMap<String, JasperDesign>();
 	private static final HashMap<String, Long> lastCompiledMap = new HashMap<String, Long>();
+	private boolean useDesignCaching = false;
 	private JasperReport mainJasperReport = null;
 	private JasperPrint jasperPrint = null;
 	private Connection dbConnection = null;
@@ -382,22 +384,34 @@ public class JasperReportExecuter {
 		if (jrxmlFile.exists() == false) {
 			throw new Exception("jrxml file: " + jrxmlFile.getAbsolutePath() + " does not exist.");
 		}
-		if (replaceJrxmlRef) {
-			String jrxmlContent = IOUtils.toString(new FileInputStream(jrxmlFile), "UTF-8");
-			if (jrxmlContent.contains(".jrxml")) {
-				// jrxml reference detected
-				jrxmlContent = jrxmlContent.replace(".jrxml", ".jasper");
-				jrxmlFile.renameTo(new File(jrxmlFile.getAbsolutePath()+".original"));
-				Writer out = new FileWriter(jrxmlFile.getAbsolutePath());
-				IOUtils.write(jrxmlContent.getBytes(), out, "UTF-8");
-				out.flush();
-				out.close();
+		JasperDesign jasperDesign = null;
+		synchronized(designMap) {
+			jasperDesign = designMap.get(jrxmlFile.getAbsolutePath());
+			if (jasperDesign == null) {
+				if (replaceJrxmlRef) {
+					String jrxmlContent = IOUtils.toString(new FileInputStream(jrxmlFile), "UTF-8");
+					if (jrxmlContent.contains(".jrxml")) {
+						// jrxml reference detected
+						jrxmlContent = jrxmlContent.replace(".jrxml", ".jasper");
+						jrxmlFile.renameTo(new File(jrxmlFile.getAbsolutePath()+".original"));
+						Writer out = new FileWriter(jrxmlFile.getAbsolutePath());
+						IOUtils.write(jrxmlContent.getBytes(), out, "UTF-8");
+						out.flush();
+						out.close();
+					}
+				}
+				FileInputStream fis = new FileInputStream(jrxmlFile);
+				InputSource source = new InputSource(fis);
+				source.setEncoding("UTF-8");
+				jasperDesign = loader.loadXML(source);
+				if (fixLanguage) {
+					jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA);
+				}
+				if (useDesignCaching) {
+					designMap.put(jrxmlFile.getAbsolutePath(), jasperDesign);
+				}
 			}
 		}
-		FileInputStream fis = new FileInputStream(jrxmlFile);
-		InputSource source = new InputSource(fis);
-		source.setEncoding("UTF-8");
-		JasperDesign jasperDesign = loader.loadXML(source);
 		return jasperDesign;
 	}
 
@@ -411,7 +425,7 @@ public class JasperReportExecuter {
 			throw new Exception(message, e);
 		}
 		final File currentJrxmlFile = new File(jrxmlFilePath);
-		JasperReport jasperReport = null;
+		JasperReport compiledJasperReport = null;
 		String jasperFile = jrxmlFilePath.replace(".jrxml", ".jasper");
 		if (needCompiling(jrxmlFilePath)) {
 			// iterate through the report and find the sub reports and compile
@@ -424,29 +438,34 @@ public class JasperReportExecuter {
 				compileException = e;
 				return;
 			}
-			if (fixLanguage) {
-				jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA);
-			}
 			try {
-				jasperReport = JasperCompileManager.compileReport(jasperDesign);
+				compiledJasperReport = JasperCompileManager.compileReport(jasperDesign);
 				System.out.println("Save jasper file " + jasperFile);
-				JRSaver.saveObject(jasperReport, jasperFile);
+				JRSaver.saveObject(compiledJasperReport, jasperFile);
 			} catch (JRException e) {
 				compileException = e;
 				return;
 			}
-			reportMap.put(jrxmlFilePath, jasperReport);
+			reportMap.put(jrxmlFilePath, compiledJasperReport);
 			lastCompiledMap.put(jrxmlFilePath, System.currentTimeMillis());
 		} else {
-			jasperReport = (JasperReport) JRLoader.loadObjectFromFile(jasperFile);
+			synchronized(reportMap) {
+				compiledJasperReport = reportMap.get(jrxmlFilePath);
+				if (compiledJasperReport == null) {
+					compiledJasperReport = (JasperReport) JRLoader.loadObjectFromFile(jasperFile);
+					if (useDesignCaching) {
+						reportMap.put(jrxmlFilePath, compiledJasperReport);
+					}
+				}
+			}
 		}
-		if (isMainReport && jasperReport.getQuery() != null) {
-			queryString = jasperReport.getQuery().getText();
+		if (isMainReport && compiledJasperReport.getQuery() != null) {
+			queryString = compiledJasperReport.getQuery().getText();
 		}
-		if (SectionTypeEnum.BAND.equals(jasperReport.getSectionType())) {
+		if (SectionTypeEnum.BAND.equals(compiledJasperReport.getSectionType())) {
 			// this is a normal report
 			// traverse through the report and gather the sub reports to compile them
-			JRElementsVisitor.visitReport(jasperReport, new JRVisitor() {
+			JRElementsVisitor.visitReport(compiledJasperReport, new JRVisitor() {
 				
 				@Override
 				public void visitSubreport(JRSubreport subreport) {
@@ -516,7 +535,7 @@ public class JasperReportExecuter {
 			});
 		} else {
 			// this is a book and a book does not have subreports but SubreportPartComponents
-			JRSection detailSection = jasperReport.getDetailSection();
+			JRSection detailSection = compiledJasperReport.getDetailSection();
 			if (detailSection != null) {
 				JRPart[] parts = detailSection.getParts();
 				if (parts != null) {
@@ -535,7 +554,7 @@ public class JasperReportExecuter {
 					}
 				}
 			}
-			JRGroup[] groups = jasperReport.getGroups();
+			JRGroup[] groups = compiledJasperReport.getGroups();
 			if (groups != null) {
 				for (JRGroup g : groups) {
 					JRSection groupHeader = g.getGroupHeaderSection();
@@ -1271,6 +1290,16 @@ public class JasperReportExecuter {
 	public void setDefaultPdfFontResourcePath(String defaultPdfFontPath) {
 		if (defaultPdfFontPath != null && defaultPdfFontPath.trim().isEmpty() == false) {
 			this.defaultPdfFontResourcePath = defaultPdfFontPath;
+		}
+	}
+
+	public boolean isUseDesignCaching() {
+		return useDesignCaching;
+	}
+
+	public void setUseDesignCaching(Boolean useDesignCaching) {
+		if (useDesignCaching != null) {
+			this.useDesignCaching = useDesignCaching.booleanValue();
 		}
 	}
 	
