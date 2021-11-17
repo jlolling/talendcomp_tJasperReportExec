@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.jlo.talendcomp</groupId>
 	<artifactId>jlo-talendcomp-jasperreportexec</artifactId>
-	<version>6.1</version>
+	<version>6.2</version>
 	<organization>
 		<name>Jan Lolling</name>
 		<url>http://jan-lolling.de</url>
@@ -224,7 +224,7 @@
 					<componentName>tJasperReportExec</componentName>
 					<copyFromSourceBaseDir>${project.basedir}/talend_component</copyFromSourceBaseDir>
 					<componentBaseDir>${project.basedir}/talend_component</componentBaseDir>
-					<studioUserComponentFolder>/Data/Talend/Studio/talend_user_components</studioUserComponentFolder>
+					<studioUserComponentFolder>${custom_component_folder}</studioUserComponentFolder>
 				</configuration>
 				<executions>
 					<execution>

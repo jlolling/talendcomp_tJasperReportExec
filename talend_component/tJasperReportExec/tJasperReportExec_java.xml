@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <COMPONENT> 
-  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="6.1" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20201125" STARTABLE="true"> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="6.2" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20211117" STARTABLE="true"> 
     <SIGNATURE/> 
   </HEADER>  
   <FAMILIES> 
@@ -228,13 +228,13 @@
     <PARAMETER NAME="DIE_ON_ERROR" FIELD="CHECK" NUM_ROW="130"> 
       <DEFAULT>true</DEFAULT> 
     </PARAMETER>  
-    <PARAMETER NAME="RELEASE_LABEL_20201125" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
-      <DEFAULT>Release: 6.1 build at: 20201125</DEFAULT>
+    <PARAMETER NAME="RELEASE_LABEL_20211117" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 6.2 build at: 20211117</DEFAULT>
     </PARAMETER>
   </ADVANCED_PARAMETERS>  
   <CODEGENERATION> 
     <IMPORTS> 
-      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-6.1.jar" MVN="mvn:org.talend.libraries/jlo-talendcomp-jasperreportexec-6.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-6.2.jar" MVN="mvn:org.talend.libraries/jlo-talendcomp-jasperreportexec-6.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="jasperreports" MODULE="jasperreports-6.16.0.jar" MVN="mvn:org.talend.libraries/jasperreports-6.16.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.4.jar" MVN="mvn:org.talend.libraries/commons-beanutils-1.9.4/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" MVN="mvn:org.talend.libraries/commons-collections-3.2.2/6.0.0-SNAPSHOT" REQUIRED="true"/>

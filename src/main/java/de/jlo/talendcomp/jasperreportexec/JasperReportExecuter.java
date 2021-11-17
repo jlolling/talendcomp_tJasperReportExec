@@ -637,7 +637,7 @@ public class JasperReportExecuter {
 		}
 	}
 	
-	private JRAbstractExporter<?, ?, ?, ?> createPdfExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createPdfExporter() throws Exception {
 		setupOutputFile("pdf");
 		JRPdfExporter exporter = new JRPdfExporter();
 		SimplePdfExporterConfiguration exportConfiguration = new SimplePdfExporterConfiguration();
@@ -687,7 +687,13 @@ public class JasperReportExecuter {
 			DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.default.pdf.font.name", defaultPdfFontResourcePath);
 			DefaultJasperReportsContext.getInstance().setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
 			exportConfiguration.setPdfaConformance(pdfaConformanceEnum);
-			exportConfiguration.setIccProfilePath(iccProfilePath);
+			if (iccProfilePath != null && iccProfilePath.trim().isEmpty() == false) {
+				File iccProfileFile = new File(iccProfilePath);
+				if (iccProfileFile.exists() == false) {
+					throw new Exception("Configured ICC-profile file: " + iccProfileFile.getAbsolutePath() + " does not exist");
+				}
+				exportConfiguration.setIccProfilePath(iccProfilePath);
+			}
 		}
 		exporter.setConfiguration(exportConfiguration);
 		// report configuration
