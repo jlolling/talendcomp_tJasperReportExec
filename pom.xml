@@ -1,18 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.jlo.talendcomp</groupId>
 	<artifactId>jlo-talendcomp-jasperreportexec</artifactId>
-	<version>6.2</version>
+	<version>7.0</version>
 	<organization>
 		<name>Jan Lolling</name>
 		<url>http://jan-lolling.de</url>
 	</organization>
 	<repositories>
 		<repository>
+			<id>third-party-ce-artifacts</id>
+			<name>third-party-ce-artifacts</name>
+			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts</url>
+		</repository>
+		<repository>
 			<id>jr-ce-releases</id>
 			<name>jaspersoft-releases</name>
-			<url>https://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
 		</repository>
 		<repository>
 			<id>releases</id>
@@ -41,10 +47,6 @@
 				<exclusion>
 					<artifactId>geronimo-stax-api_1.0_spec</artifactId>
 					<groupId>org.apache.geronimo.specs</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
 				</exclusion>
 				<exclusion>
 					<artifactId>jdtcore</artifactId>
@@ -102,19 +104,23 @@
 					<artifactId>spring-context</artifactId>
 					<groupId>org.springframework</groupId>
 				</exclusion>
-				<exclusion>
-					<artifactId>javax.inject</artifactId>
-					<groupId>javax.inject</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-annotations</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-core</artifactId>
-				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-annotation-processors</artifactId>
+			<version>6.16.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.tascalate.javaflow</groupId>
+			<artifactId>net.tascalate.javaflow.api</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<!-- Thanks for using https://jar-download.com -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-javaflow</artifactId>
+			<version>20160505</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -200,11 +206,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>3.2.4.RELEASE</version>
-		</dependency>
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-beans</artifactId> 
+			<version>5.3.1</version> </dependency> -->
 	</dependencies>
 	<build>
 		<plugins>
