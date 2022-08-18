@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <COMPONENT> 
-  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="7.1" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20220608" STARTABLE="true"> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="7.2" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20220817" STARTABLE="true"> 
     <SIGNATURE/> 
   </HEADER>  
   <FAMILIES> 
@@ -231,33 +231,33 @@
     <PARAMETER NAME="DIE_ON_ERROR" FIELD="CHECK" NUM_ROW="130"> 
       <DEFAULT>true</DEFAULT> 
     </PARAMETER>  
-    <PARAMETER NAME="RELEASE_LABEL_20220608" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
-      <DEFAULT>Release: 7.1 build at: 20220608</DEFAULT>
+    <PARAMETER NAME="RELEASE_LABEL_20220817" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 7.2 build at: 20220817</DEFAULT>
     </PARAMETER>
   </ADVANCED_PARAMETERS>  
   <CODEGENERATION> 
     <IMPORTS> 
-      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-7.1.jar" MVN="mvn:org.talend.libraries/jlo-talendcomp-jasperreportexec-7.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.16.0.jar" MVN="mvn:org.talend.libraries/jasperreports-6.16.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-7.2.jar" MVN="mvn:org.talend.libraries/jlo-talendcomp-jasperreportexec-7.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.4.jar" MVN="mvn:org.talend.libraries/commons-beanutils-1.9.4/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" MVN="mvn:org.talend.libraries/commons-collections-3.2.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-digester" MODULE="commons-digester-2.1.jar" MVN="mvn:org.talend.libraries/commons-digester-2.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" MVN="mvn:org.talend.libraries/commons-logging-1.1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-collections4" MODULE="commons-collections4-4.2.jar" MVN="mvn:org.talend.libraries/commons-collections4-4.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="itext" MODULE="itext-2.1.7.js8.jar" MVN="mvn:org.talend.libraries/itext-2.1.7.js8/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="bcprov-jdk15on" MODULE="bcprov-jdk15on-1.64.jar" MVN="mvn:org.talend.libraries/bcprov-jdk15on-1.64/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="itext" MODULE="itext-2.1.7.js10.jar" MVN="mvn:org.talend.libraries/itext-2.1.7.js10/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcprov-jdk15on" MODULE="bcprov-jdk15on-1.70.jar" MVN="mvn:org.talend.libraries/bcprov-jdk15on-1.70/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcutil-jdk15on" MODULE="bcutil-jdk15on-1.70.jar" MVN="mvn:org.talend.libraries/bcutil-jdk15on-1.70/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="jcommon" MODULE="jcommon-1.0.23.jar" MVN="mvn:org.talend.libraries/jcommon-1.0.23/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="jfreechart" MODULE="jfreechart-1.0.19.jar" MVN="mvn:org.talend.libraries/jfreechart-1.0.19/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="ecj" MODULE="ecj-3.21.0.jar" MVN="mvn:org.talend.libraries/ecj-3.21.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="castor-xml" MODULE="castor-xml-1.4.1.jar" MVN="mvn:org.talend.libraries/castor-xml-1.4.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="castor-core" MODULE="castor-core-1.4.1.jar" MVN="mvn:org.talend.libraries/castor-core-1.4.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="commons-lang3" MODULE="commons-lang3-3.4.jar" MVN="mvn:org.talend.libraries/commons-lang3-3.4/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="javax.inject" MODULE="javax.inject-1.jar" MVN="mvn:org.talend.libraries/javax.inject-1/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jackson-core" MODULE="jackson-core-2.10.0.jar" MVN="mvn:org.talend.libraries/jackson-core-2.10.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.10.0.jar" MVN="mvn:org.talend.libraries/jackson-databind-2.10.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jackson-annotations" MODULE="jackson-annotations-2.10.0.jar" MVN="mvn:org.talend.libraries/jackson-annotations-2.10.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-annotation-processors" MODULE="jasperreports-annotation-processors-6.16.0.jar" MVN="mvn:org.talend.libraries/jasperreports-annotation-processors-6.16.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-metadata" MODULE="jasperreports-metadata-6.16.0.jar" MVN="mvn:org.talend.libraries/jasperreports-metadata-6.16.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-core" MODULE="jackson-core-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-core-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-databind-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-annotations" MODULE="jackson-annotations-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-annotations-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-dataformat-xml" MODULE="jackson-dataformat-xml-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-dataformat-xml-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="stax2-api" MODULE="stax2-api-4.2.1.jar" MVN="mvn:org.talend.libraries/stax2-api-4.2.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="woodstox-core" MODULE="woodstox-core-6.2.7.jar" MVN="mvn:org.talend.libraries/woodstox-core-6.2.7/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-annotation-processors" MODULE="jasperreports-annotation-processors-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-annotation-processors-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-metadata" MODULE="jasperreports-metadata-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-metadata-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="net.tascalate.javaflow.api" MODULE="net.tascalate.javaflow.api-2.2.2.jar" MVN="mvn:org.talend.libraries/net.tascalate.javaflow.api-2.2.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-javaflow" MODULE="commons-javaflow-20160505.jar" MVN="mvn:org.talend.libraries/commons-javaflow-20160505/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-jci-core" MODULE="commons-jci-core-1.1.jar" MVN="mvn:org.talend.libraries/commons-jci-core-1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
@@ -269,8 +269,8 @@
       <IMPORT NAME="asm-tree" MODULE="asm-tree-4.0.jar" MVN="mvn:org.talend.libraries/asm-tree-4.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="ant" MODULE="ant-1.7.1.jar" MVN="mvn:org.talend.libraries/ant-1.7.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="ant-launcher" MODULE="ant-launcher-1.7.1.jar" MVN="mvn:org.talend.libraries/ant-launcher-1.7.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.16.0.jar" MVN="mvn:org.talend.libraries/jasperreports-functions-6.16.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
-      <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.16.0.jar" MVN="mvn:org.talend.libraries/jasperreports-fonts-6.16.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-functions-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-fonts-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-io" MODULE="commons-io-1.3.2.jar" MVN="mvn:org.talend.libraries/commons-io-1.3.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="commons-compress" MODULE="commons-compress-1.21.jar" MVN="mvn:org.talend.libraries/commons-compress-1.21/6.0.0-SNAPSHOT" REQUIRED="true"/>
       <IMPORT NAME="joda-time" MODULE="joda-time-2.10.5.jar" MVN="mvn:org.talend.libraries/joda-time-2.10.5/6.0.0-SNAPSHOT" REQUIRED="true"/>
