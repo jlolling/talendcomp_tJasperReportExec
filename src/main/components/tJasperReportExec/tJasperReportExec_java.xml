@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<COMPONENT> 
+  <HEADER PLATEFORM="ALL" SERIAL="" VERSION="7.3" STATUS="PROD" COMPATIBILITY="ALL" AUTHOR="Jan Lolling" RELEASE_DATE="20231009" STARTABLE="true"> 
+    <SIGNATURE/> 
+  </HEADER>  
+  <FAMILIES> 
+    <FAMILY>Business_Intelligence/Jasper</FAMILY> 
+  </FAMILIES>  
+  <DOCUMENTATION> 
+    <URL/> 
+  </DOCUMENTATION>  
+  <CONNECTORS> 
+    <CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="0" MAX_INPUT="1"/>  
+    <CONNECTOR CTYPE="SUBJOB_OK" MAX_INPUT="1" MAX_OUTPUT="1"/>  
+    <CONNECTOR CTYPE="SUBJOB_ERROR" MAX_INPUT="1" MAX_OUTPUT="1"/>  
+    <CONNECTOR CTYPE="COMPONENT_OK"/>  
+    <CONNECTOR CTYPE="COMPONENT_ERROR"/>  
+    <CONNECTOR CTYPE="RUN_IF"/> 
+  </CONNECTORS>  
+  <PARAMETERS> 
+    <PARAMETER NAME="JRXML_FILE" FIELD="FILE" NUM_ROW="1" REQUIRED="true"> 
+      <DEFAULT>""</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="ONLY_COMPILE" FIELD="CHECK" NUM_ROW="2" REQUIRED="true"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="DATASOURCE" FIELD="CLOSED_LIST" NUM_ROW="5" REQUIRED="true" GROUP="DATA_SOURCE" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <ITEMS DEFAULT="DB_CONNECTION"> 
+        <ITEM NAME="DB_CONNECTION" VALUE="DB_CONNECTION"/>  
+        <ITEM NAME="XML_FILE" VALUE="XML_FILE"/>  
+        <ITEM NAME="CSV_FILE" VALUE="CSV_FILE"/>  
+        <ITEM NAME="DUMMY_DS" VALUE="DUMMY_DS"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="CONNECTION" FIELD="COMPONENT_LIST" FILTER="REGEXP:^(.)*(Connection)(.)*" NUM_ROW="6" DYNAMIC_SETTINGS="true" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'DB_CONNECTION') and (ONLY_COMPILE == 'false')"/>  
+    <PARAMETER NAME="XML_DS_FILE" FIELD="FILE" NUM_ROW="6" REQUIRED="true" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'XML_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"/path/to/xmlfile"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_USE_SELECT_EXPR_FROM_REPORT" FIELD="CHECK" NUM_ROW="7" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'XML_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_SELECT_EXPR" FIELD="TEXT" NUM_ROW="7" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'XML_FILE') and (XML_USE_SELECT_EXPR_FROM_REPORT == 'false') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"."</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_DATE_PATTERN" FIELD="TEXT" NUM_ROW="8" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'XML_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"dd.MM.yyyy"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="XML_NUMBER_PATTERN" FIELD="TEXT" NUM_ROW="8" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'XML_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"###0.00;-###0.00"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_DS_FILE" FIELD="FILE" NUM_ROW="6" REQUIRED="true" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"/path/to/csvfile"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_USE_HEADER" FIELD="CHECK" NUM_ROW="7" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_COLUMN_LIST" FIELD="TEXT" NUM_ROW="8" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (CSV_USE_HEADER == 'false') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"COLUMN_0;COLUMN_1;COLUMN_2"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_CHARSET" FIELD="TEXT" NUM_ROW="9" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"UTF-8"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_ROW_DELIMITER" FIELD="TEXT" NUM_ROW="9" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"\n"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_COL_DELIMITER" FIELD="TEXT" NUM_ROW="9" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>";"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_DATE_PATTERN" FIELD="TEXT" NUM_ROW="10" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"yyyy-MM-dd HH:mm:ss"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CSV_NUMBER_PATTERN" FIELD="TEXT" NUM_ROW="10" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'CSV_FILE') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"###0.00;-###0.00"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="DUMMY_DS_NUMBER_RECORDS" FIELD="TEXT" NUM_ROW="7" GROUP="DATA_SOURCE" SHOW_IF="(DATASOURCE == 'DUMMY_DS') and (ONLY_COMPILE == 'false')" REQUIRED="true"> 
+      <DEFAULT>1</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_TYPE" FIELD="CLOSED_LIST" NUM_ROW="20" REQUIRED="true" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <ITEMS DEFAULT="PDF"> 
+        <ITEM NAME="CSV" VALUE="CSV"/>  
+        <ITEM NAME="DOCX" VALUE="DOCX"/>  
+        <ITEM NAME="HTML" VALUE="HTML"/>  
+        <ITEM NAME="ODT" VALUE="ODT"/>  
+        <ITEM NAME="ODS" VALUE="ODS"/>  
+        <ITEM NAME="PDF" VALUE="PDF"/>  
+        <ITEM NAME="RTF" VALUE="RTF"/>  
+        <ITEM NAME="TEXT" VALUE="TXT"/>  
+        <ITEM NAME="XLS" VALUE="XLS"/>  
+        <ITEM NAME="XLSX" VALUE="XLSX"/>  
+        <ITEM NAME="PPTX" VALUE="PPTX"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_LOCALE" FIELD="TEXT" NUM_ROW="30" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>"de"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_DIR" FIELD="DIRECTORY" NUM_ROW="40" REQUIRED="true" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>""</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OUTPUT_FILENAME" FIELD="TEXT" NUM_ROW="50" REQUIRED="true" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>"report_out"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="OVERWRITE_FILES" FIELD="CHECK" NUM_ROW="60" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CREATE_DIRS" FIELD="CHECK" NUM_ROW="60" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="SEQUENTIAL_FILENAMES" FIELD="CHECK" NUM_ROW="70" GROUP="OUTPUT" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="TIMESTAMP_PATTERN" FIELD="TEXT" NUM_ROW="70" REQUIRED="true" GROUP="OUTPUT" SHOW_IF="(SEQUENTIAL_FILENAMES == 'true') and (ONLY_COMPILE == 'false')"> 
+      <DEFAULT>"yyyyMMdd_HHmmss"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="REPORT_PARAMS" FIELD="TABLE" NUM_ROW="80" NB_LINES="5" GROUP="REPORTPARAMS" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <ITEMS> 
+        <ITEM NAME="PARAM_NAME" FIELD="String" VALUE="&quot;parameterName&quot;"/>  
+        <ITEM NAME="PARAM_VALUE" FIELD="String" VALUE="&quot;parameterValue&quot;"/>  
+        <ITEM NAME="PARAM_TYPE" VALUE="String" FIELD="CLOSED_LIST"> 
+          <ITEMS DEFAULT="NoConversion"> 
+            <ITEM NAME="NoConversion" VALUE="NoConversion"/>  
+            <ITEM NAME="BigDecimal" VALUE="BigDecimal"/>  
+            <ITEM NAME="Boolean" VALUE="Boolean"/>  
+            <ITEM NAME="Date" VALUE="Date"/>  
+            <ITEM NAME="Double" VALUE="Double"/>  
+            <ITEM NAME="Float" VALUE="Float"/>  
+            <ITEM NAME="Int" VALUE="Int"/>  
+            <ITEM NAME="Long" VALUE="Long"/>  
+            <ITEM NAME="Short" VALUE="Short"/>  
+            <ITEM NAME="String" VALUE="String"/>  
+            <ITEM NAME="Timestamp" VALUE="Timestamp"/> 
+          </ITEMS> 
+        </ITEM>  
+        <ITEM NAME="PARAM_IS_COLLECTION" FIELD="CHECK"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="COLLECTION_DELIMITER" FIELD="TEXT" NUM_ROW="90" GROUP="REPORTPARAMS" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>"|"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CHECK_PARAMETERS" FIELD="CHECK" NUM_ROW="90" GROUP="REPORTPARAMS" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="CONVERSION_PATTERN" FIELD="TEXT" NUM_ROW="100" GROUP="REPORTPARAMS" SHOW_IF="ONLY_COMPILE == 'false'"> 
+      <DEFAULT>"yyyy-MM-dd"</DEFAULT> 
+    </PARAMETER> 
+  </PARAMETERS>  
+  <ADVANCED_PARAMETERS> 
+    <PARAMETER FIELD="CHECK" NAME="USE_CACHING" NUM_ROW="1"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_DETECT_CELL_TYPE" NUM_ROW="10" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_WHITE_PAGE_BACKGROUND" NUM_ROW="20" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS" NUM_ROW="30" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS" NUM_ROW="40" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_IS_ONE_PAGE_PER_SHEET" NUM_ROW="50" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER FIELD="FILE" NAME="XLS_WORKBOOK_TEMPLATE" NUM_ROW="60" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER FIELD="CHECK" NAME="XLS_WORKBOOK_TEMPLATE_KEEP_SHEETS" NUM_ROW="60" GROUP="OPTIONS_XLS_XLSX" SHOW_IF="(OUTPUT_TYPE == 'XLS') or (OUTPUT_TYPE == 'XLSX')"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_COMPRESSED" FIELD="CHECK" NUM_ROW="10" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_CREATING_BATCH_MODE_BOOKMARKS" FIELD="CHECK" NUM_ROW="20" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_ENCRYPTED" FIELD="CHECK" NUM_ROW="30" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_IS_128_BIT_KEY" FIELD="CHECK" NUM_ROW="30" GROUP="OPTIONS_PDF" SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_IS_ENCRYPTED == 'true')"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_PASSWORD" FIELD="TEXT" NUM_ROW="30" GROUP="OPTIONS_PDF" SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_IS_ENCRYPTED == 'true')" REQUIRED="true"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_AUTHOR" FIELD="TEXT" NUM_ROW="40" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_CREATOR" FIELD="TEXT" NUM_ROW="50" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT>"TIBCO JasperReports and Talend | Job: " + jobName</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_TITLE" FIELD="TEXT" NUM_ROW="60" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_SUBJECT" FIELD="TEXT" NUM_ROW="70" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_VERSION" FIELD="CLOSED_LIST" NUM_ROW="80" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <ITEMS DEFAULT="VERSION_1_4"> 
+        <ITEM NAME="VERSION_1_2" VALUE="2"/>  
+        <ITEM NAME="VERSION_1_3" VALUE="3"/>  
+        <ITEM NAME="VERSION_1_4" VALUE="4"/>  
+        <ITEM NAME="VERSION_1_5" VALUE="5"/>  
+        <ITEM NAME="VERSION_1_6" VALUE="6"/>  
+        <ITEM NAME="VERSION_1_7" VALUE="7"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_A_CONFORMANCE" FIELD="CLOSED_LIST" NUM_ROW="82" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <ITEMS DEFAULT="NONE"> 
+        <ITEM NAME="NONE" VALUE="none"/>  
+        <ITEM NAME="PDFA1A" VALUE="pdfa1a"/>  
+        <ITEM NAME="PDFA1B" VALUE="pdfa1b"/> 
+      </ITEMS> 
+    </PARAMETER>  
+    <PARAMETER NAME="ICC_PROFILE_PATH" FIELD="FILE" NUM_ROW="85" GROUP="OPTIONS_PDF" SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_A_CONFORMANCE != 'none')"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="DEFAULT_EMBEDDED_PDF_FONT_RESOURCE" FIELD="TEXT" NUM_ROW="86" GROUP="OPTIONS_PDF" SHOW_IF="(OUTPUT_TYPE == 'PDF') and (PDF_A_CONFORMANCE != 'none')"> 
+      <DEFAULT>"net/sf/jasperreports/fonts/dejavu/DejaVuSans.ttf"</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="PDF_KEYWORDS" FIELD="TEXT" NUM_ROW="90" GROUP="OPTIONS_PDF" SHOW_IF="OUTPUT_TYPE == 'PDF'"> 
+      <DEFAULT/> 
+    </PARAMETER>  
+    <PARAMETER NAME="USE_JAVA_AS_LANG" FIELD="CHECK" NUM_ROW="100"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="LIST_PARAMETERS" FIELD="CHECK" NUM_ROW="120" SHOW_IF="CHECK_PARAMETERS == 'true'"> 
+      <DEFAULT>false</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="DIE_ON_ERROR" FIELD="CHECK" NUM_ROW="130"> 
+      <DEFAULT>true</DEFAULT> 
+    </PARAMETER>  
+    <PARAMETER NAME="RELEASE_LABEL_20231009" FIELD="LABEL" COLOR="0;0;0" NUM_ROW="900">
+      <DEFAULT>Release: 7.3 build at: 20231009</DEFAULT>
+    </PARAMETER>
+  </ADVANCED_PARAMETERS>  
+  <CODEGENERATION> 
+    <IMPORTS> 
+      <IMPORT NAME="jlo-talendcomp-jasperreportexec" MODULE="jlo-talendcomp-jasperreportexec-7.3.jar" MVN="mvn:org.talend.libraries/jlo-talendcomp-jasperreportexec-7.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports" MODULE="jasperreports-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-beanutils" MODULE="commons-beanutils-1.9.4.jar" MVN="mvn:org.talend.libraries/commons-beanutils-1.9.4/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-collections" MODULE="commons-collections-3.2.2.jar" MVN="mvn:org.talend.libraries/commons-collections-3.2.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-digester" MODULE="commons-digester-2.1.jar" MVN="mvn:org.talend.libraries/commons-digester-2.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-logging" MODULE="commons-logging-1.1.1.jar" MVN="mvn:org.talend.libraries/commons-logging-1.1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-collections4" MODULE="commons-collections4-4.2.jar" MVN="mvn:org.talend.libraries/commons-collections4-4.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="itext" MODULE="itext-2.1.7.js10.jar" MVN="mvn:org.talend.libraries/itext-2.1.7.js10/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcprov-jdk15on" MODULE="bcprov-jdk15on-1.70.jar" MVN="mvn:org.talend.libraries/bcprov-jdk15on-1.70/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcutil-jdk15on" MODULE="bcutil-jdk15on-1.70.jar" MVN="mvn:org.talend.libraries/bcutil-jdk15on-1.70/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jcommon" MODULE="jcommon-1.0.23.jar" MVN="mvn:org.talend.libraries/jcommon-1.0.23/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jfreechart" MODULE="jfreechart-1.0.19.jar" MVN="mvn:org.talend.libraries/jfreechart-1.0.19/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="ecj" MODULE="ecj-3.21.0.jar" MVN="mvn:org.talend.libraries/ecj-3.21.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-core" MODULE="jackson-core-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-core-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-databind" MODULE="jackson-databind-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-databind-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-annotations" MODULE="jackson-annotations-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-annotations-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jackson-dataformat-xml" MODULE="jackson-dataformat-xml-2.13.3.jar" MVN="mvn:org.talend.libraries/jackson-dataformat-xml-2.13.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="stax2-api" MODULE="stax2-api-4.2.1.jar" MVN="mvn:org.talend.libraries/stax2-api-4.2.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="woodstox-core" MODULE="woodstox-core-6.2.7.jar" MVN="mvn:org.talend.libraries/woodstox-core-6.2.7/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-annotation-processors" MODULE="jasperreports-annotation-processors-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-annotation-processors-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-metadata" MODULE="jasperreports-metadata-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-metadata-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="net.tascalate.javaflow.api" MODULE="net.tascalate.javaflow.api-2.2.2.jar" MVN="mvn:org.talend.libraries/net.tascalate.javaflow.api-2.2.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-javaflow" MODULE="commons-javaflow-20160505.jar" MVN="mvn:org.talend.libraries/commons-javaflow-20160505/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-jci-core" MODULE="commons-jci-core-1.1.jar" MVN="mvn:org.talend.libraries/commons-jci-core-1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-jci-fam" MODULE="commons-jci-fam-1.1.jar" MVN="mvn:org.talend.libraries/commons-jci-fam-1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="asm" MODULE="asm-4.0.jar" MVN="mvn:org.talend.libraries/asm-4.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="asm-analysis" MODULE="asm-analysis-4.0.jar" MVN="mvn:org.talend.libraries/asm-analysis-4.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="asm-commons" MODULE="asm-commons-4.0.jar" MVN="mvn:org.talend.libraries/asm-commons-4.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="asm-util" MODULE="asm-util-4.0.jar" MVN="mvn:org.talend.libraries/asm-util-4.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="asm-tree" MODULE="asm-tree-4.0.jar" MVN="mvn:org.talend.libraries/asm-tree-4.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="ant" MODULE="ant-1.7.1.jar" MVN="mvn:org.talend.libraries/ant-1.7.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="ant-launcher" MODULE="ant-launcher-1.7.1.jar" MVN="mvn:org.talend.libraries/ant-launcher-1.7.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-functions" MODULE="jasperreports-functions-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-functions-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="jasperreports-fonts" MODULE="jasperreports-fonts-6.20.0.jar" MVN="mvn:org.talend.libraries/jasperreports-fonts-6.20.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-io" MODULE="commons-io-2.11.0.jar" MVN="mvn:org.talend.libraries/commons-io-2.11.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-compress" MODULE="commons-compress-1.21.jar" MVN="mvn:org.talend.libraries/commons-compress-1.21/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="joda-time" MODULE="joda-time-2.10.5.jar" MVN="mvn:org.talend.libraries/joda-time-2.10.5/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="groovy" MODULE="groovy-3.0.7.jar" MVN="mvn:org.talend.libraries/groovy-3.0.7/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="poi-ooxml-5.2.3" MODULE="poi-ooxml-5.2.3-patched.jar" MVN="mvn:org.talend.libraries/poi-ooxml-5.2.3-patched/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="poi" MODULE="poi-5.2.3.jar" MVN="mvn:org.talend.libraries/poi-5.2.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-codec" MODULE="commons-codec-1.15.jar" MVN="mvn:org.talend.libraries/commons-codec-1.15/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="commons-math3" MODULE="commons-math3-3.6.1.jar" MVN="mvn:org.talend.libraries/commons-math3-3.6.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="SparseBitSet" MODULE="SparseBitSet-1.2.jar" MVN="mvn:org.talend.libraries/SparseBitSet-1.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="poi-ooxml-lite" MODULE="poi-ooxml-lite-5.2.3.jar" MVN="mvn:org.talend.libraries/poi-ooxml-lite-5.2.3/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="xmlbeans" MODULE="xmlbeans-5.1.1.jar" MVN="mvn:org.talend.libraries/xmlbeans-5.1.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="curvesapi" MODULE="curvesapi-1.07.jar" MVN="mvn:org.talend.libraries/curvesapi-1.07/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="log4j-api" MODULE="log4j-api-2.18.0.jar" MVN="mvn:org.talend.libraries/log4j-api-2.18.0/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="xalan" MODULE="xalan-2.7.2.jar" MVN="mvn:org.talend.libraries/xalan-2.7.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="serializer" MODULE="serializer-2.7.2.jar" MVN="mvn:org.talend.libraries/serializer-2.7.2/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="pdf-renderer" MODULE="pdf-renderer-1.0.5.jar" MVN="mvn:org.talend.libraries/pdf-renderer-1.0.5/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bcprov-jdk16" MODULE="bcprov-jdk16-1.46.jar" MVN="mvn:org.talend.libraries/bcprov-jdk16-1.46/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="bctsp-jdk16" MODULE="bctsp-jdk16-1.46.jar" MVN="mvn:org.talend.libraries/bctsp-jdk16-1.46/6.0.0-SNAPSHOT" REQUIRED="true"/>
+      <IMPORT NAME="dom4j" MODULE="dom4j-1.6.1.jar" MVN="mvn:org.talend.libraries/dom4j-1.6.1/6.0.0-SNAPSHOT" REQUIRED="true"/>
+    </IMPORTS> 
+  </CODEGENERATION>  
+  <RETURNS> 
+    <RETURN NAME="OUTPUT_FILE" TYPE="id_String" AVAILABILITY="AFTER"/>  
+    <RETURN NAME="NUMBER_OF_PAGES" TYPE="id_Integer" AVAILABILITY="AFTER"/>  
+    <RETURN NAME="REPORT_QUERY" TYPE="id_String" AVAILABILITY="AFTER"/>  
+    <RETURN NAME="REPORT_FINISHED_SUCCESSFULLY" TYPE="id_Boolean" AVAILABILITY="AFTER"/> 
+  </RETURNS>
+</COMPONENT>
