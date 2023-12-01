@@ -8,3 +8,4 @@ This component runs a JasperReport inside a Talend Job.
 * Provides various settings for the different output formats
 
 This component is available on Release section on the right side of this page
+Please take a look in the documentation: https://github.com/jlolling/talendcomp_tJasperReportExec/blob/master/doc/tJasperReportExec.pdf
