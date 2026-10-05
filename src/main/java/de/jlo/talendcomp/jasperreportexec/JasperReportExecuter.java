@@ -31,13 +31,11 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.xml.sax.InputSource;
 
 import net.sf.jasperreports.crosstabs.JRCrosstab;
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRAbstractExporter;
 import net.sf.jasperreports.engine.JRBreak;
-import net.sf.jasperreports.engine.JRChart;
 import net.sf.jasperreports.engine.JRComponentElement;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRElementGroup;
@@ -65,10 +63,8 @@ import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRTextExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdsExporter;
 import net.sf.jasperreports.engine.export.oasis.JROdtExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
@@ -80,7 +76,6 @@ import net.sf.jasperreports.engine.type.SectionTypeEnum;
 import net.sf.jasperreports.engine.util.JRElementsVisitor;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
-import net.sf.jasperreports.engine.xml.JRXmlDigesterFactory;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.export.AbstractXlsReportConfiguration;
 import net.sf.jasperreports.export.HtmlExporterOutput;
@@ -97,8 +92,6 @@ import net.sf.jasperreports.export.SimpleOdsReportConfiguration;
 import net.sf.jasperreports.export.SimpleOdtExporterConfiguration;
 import net.sf.jasperreports.export.SimpleOdtReportConfiguration;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
-import net.sf.jasperreports.export.SimplePdfReportConfiguration;
 import net.sf.jasperreports.export.SimplePptxExporterConfiguration;
 import net.sf.jasperreports.export.SimplePptxReportConfiguration;
 import net.sf.jasperreports.export.SimpleRtfExporterConfiguration;
@@ -111,9 +104,13 @@ import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxExporterConfiguration;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import net.sf.jasperreports.export.WriterExporterOutput;
-import net.sf.jasperreports.export.type.PdfVersionEnum;
-import net.sf.jasperreports.export.type.PdfaConformanceEnum;
 import net.sf.jasperreports.parts.subreport.SubreportPartComponent;
+import net.sf.jasperreports.pdf.JRPdfExporter;
+import net.sf.jasperreports.pdf.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.pdf.SimplePdfReportConfiguration;
+import net.sf.jasperreports.pdf.type.PdfVersionEnum;
+import net.sf.jasperreports.pdf.type.PdfaConformanceEnum;
+import net.sf.jasperreports.poi.export.JRXlsExporter;
 
 public class JasperReportExecuter {
 
@@ -375,9 +372,8 @@ public class JasperReportExecuter {
 	private Exception compileException = null;
 	
 	private JasperDesign retrieveJasperDesign(File jrxmlFile) throws Exception {
-		JRXmlLoader loader = new JRXmlLoader(
-					DefaultJasperReportsContext.getInstance(), 
-					JRXmlDigesterFactory.createDigester(DefaultJasperReportsContext.getInstance()));
+		JRXmlLoader loader = new JRXmlLoader(DefaultJasperReportsContext.getInstance());
+		
 		if (jrxmlFile.getName().toLowerCase().endsWith(".jasper")) {
 			jrxmlFile = new File(jrxmlFile.getAbsolutePath().replace(".jasper", ".jrxml"));
 		}
@@ -401,9 +397,7 @@ public class JasperReportExecuter {
 					}
 				}
 				FileInputStream fis = new FileInputStream(jrxmlFile);
-				InputSource source = new InputSource(fis);
-				source.setEncoding("UTF-8");
-				jasperDesign = loader.loadXML(source);
+				jasperDesign = loader.loadXML(fis);
 				if (fixLanguage) {
 					jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA);
 				}
@@ -495,9 +489,6 @@ public class JasperReportExecuter {
 
 				@Override
 				public void visitBreak(JRBreak breakElement) {}
-
-				@Override
-				public void visitChart(JRChart chart) {}
 
 				@Override
 				public void visitCrosstab(JRCrosstab crosstab) {}
@@ -963,7 +954,7 @@ public class JasperReportExecuter {
 	 */
 	public void setOutputLocale(String locale) {
 		if (locale != null && locale.isEmpty() == false) {
-			parameterMap.put("REPORT_LOCALE", new Locale(locale));
+			parameterMap.put("REPORT_LOCALE", Locale.of(locale));
 		}
 	}
 
