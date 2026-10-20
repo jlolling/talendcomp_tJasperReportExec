@@ -1,0 +1,64 @@
+<!-- Created with Jaspersoft Studio version 7.0.0.final using JasperReports Library version 7.0.0  -->
+<jasperReport name="employees_csv" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="efc862f5-6e32-4ca3-ac4b-4ccb3fe02e2f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="employees-csv"/>
+	<query language="CSV"><![CDATA[]]></query>
+	<field name="ID" class="java.lang.Integer"/>
+	<field name="FirstName" class="java.lang.String"/>
+	<field name="LastName" class="java.lang.String"/>
+	<field name="Position" class="java.lang.String"/>
+	<title height="60" splitType="Stretch">
+		<element kind="textField" uuid="ec2e2617-aa17-45d0-9d9d-8c564e1c1327" x="0" y="0" width="555" height="40" fontSize="14.0" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA["FoodMart Employees Report - CSV"]]></expression>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</title>
+	<columnHeader height="30" splitType="Stretch">
+		<element kind="staticText" uuid="b0e3a1ad-4552-419a-a664-61490ec504f0" x="0" y="0" width="141" height="30">
+			<text><![CDATA[ID]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f5cb98a3-f290-4709-a9c8-9524784ed81e"/>
+		</element>
+		<element kind="staticText" uuid="6a9661ca-9df1-4820-b916-dc0520260290" x="141" y="0" width="138" height="30">
+			<text><![CDATA[FirstName]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ec2ec5b5-aa4f-4a6d-bb61-0246420d6390"/>
+		</element>
+		<element kind="staticText" uuid="4f6febca-ff4b-4e30-9b40-70515b0300ba" x="279" y="0" width="138" height="30">
+			<text><![CDATA[LastName]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="61050b8e-5b98-487e-9894-5c373d17707b"/>
+		</element>
+		<element kind="staticText" uuid="e6ffc33a-99d5-40c7-bf45-04d44a576f41" x="417" y="0" width="138" height="30">
+			<text><![CDATA[Position]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="82718fe5-e7b9-4491-952d-1605dfec23ab"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<element kind="textField" uuid="8689b4a8-33ec-4371-9a69-1a8188fd7271" stretchType="ContainerHeight" x="0" y="0" width="141" height="30" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{ID}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f5cb98a3-f290-4709-a9c8-9524784ed81e"/>
+			</element>
+			<element kind="textField" uuid="815c6cb8-bcbf-4bc8-821f-6a7d0e35dbd7" stretchType="ContainerHeight" x="141" y="0" width="138" height="30" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{FirstName}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ec2ec5b5-aa4f-4a6d-bb61-0246420d6390"/>
+			</element>
+			<element kind="textField" uuid="b2a58aeb-a592-4c5c-bb7f-f7272c385406" stretchType="ContainerHeight" x="279" y="0" width="138" height="30" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{LastName}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="61050b8e-5b98-487e-9894-5c373d17707b"/>
+			</element>
+			<element kind="textField" uuid="412e3369-4090-4412-b348-0aa2f4a5c50e" stretchType="ContainerHeight" x="417" y="0" width="138" height="30" textAdjust="StretchHeight">
+				<expression><![CDATA[$F{Position}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="82718fe5-e7b9-4491-952d-1605dfec23ab"/>
+			</element>
+		</band>
+	</detail>
+	<pageFooter height="30" splitType="Stretch">
+		<element kind="textField" uuid="40f4c203-c68d-4e84-8649-4f8e2549a584" x="0" y="0" width="141" height="30">
+			<expression><![CDATA["FoodMart Inc."]]></expression>
+		</element>
+		<element kind="textField" uuid="558578c8-1fd0-45ef-add8-56a4debd9332" x="417" y="0" width="138" height="30">
+			<expression><![CDATA["Employees Report"]]></expression>
+		</element>
+		<element kind="textField" uuid="593aaac5-0d17-4df3-b9fa-bb2345693ec0" x="141" y="0" width="276" height="30" evaluationTime="Master" hTextAlign="Center">
+			<expression><![CDATA[$V{MASTER_CURRENT_PAGE} + " / " + $V{MASTER_TOTAL_PAGES}]]></expression>
+		</element>
+	</pageFooter>
+</jasperReport>

@@ -13,12 +13,14 @@
 		<repository>
 			<id>third-party-ce-artifacts</id>
 			<name>third-party-ce-artifacts</name>
-			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts</url>
+			<url>
+				http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts</url>
 		</repository>
 		<repository>
 			<id>jr-ce-releases</id>
 			<name>jaspersoft-releases</name>
-			<url>http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
+			<url>
+				http://jaspersoft.artifactoryonline.com/jaspersoft/jr-ce-releases</url>
 		</repository>
 		<repository>
 			<id>releases</id>
@@ -28,34 +30,45 @@
 	</repositories>
 	<dependencies>
 		<dependency>
-		    <groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
-		    <version>7.0.0.0</version>
+			<groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>7.0.0.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-annotation-processors</artifactId>
-		    <version>7.0.0.0</version>
+			<groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-annotation-processors</artifactId>
+			<version>7.0.0.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-functions</artifactId>
-		    <version>7.0.0.0</version>
+			<groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>7.0.0.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-fonts</artifactId>
-		    <version>7.0.0.0</version>
+			<groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>7.0.0.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-pdf</artifactId>
-		    <version>7.0.0.0</version>
+			<groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-pdf</artifactId>
+			<version>7.0.0.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-excel-poi</artifactId>
-		    <version>7.0.0.0</version>
+			<groupId>io.github.migueljrh.net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-excel-poi</artifactId>
+			<version>7.0.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.8</version>
 		</dependency>
 	</dependencies>
 	<build>
