@@ -7,4 +7,5 @@ This component runs a JasperReport inside a Talend Job.
 * Can use resource bundles
 * Provides various settings for the different output formats
 
-This component is available on Talend Exchange: https://exchange.talend.com
+This component is available on Release section on the right side of this page
+Please take a look in the documentation: https://github.com/jlolling/talendcomp_tJasperReportExec/blob/master/doc/tJasperReportExec.pdf
