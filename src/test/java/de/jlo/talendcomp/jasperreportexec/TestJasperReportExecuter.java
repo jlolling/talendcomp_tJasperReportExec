@@ -14,6 +14,12 @@ public class TestJasperReportExecuter {
 	@Test
 	public void test_csv_report_employee() throws Exception {
 		JasperReportExecuter jre = new JasperReportExecuter();
+		System.out.println("Delete previous jasper file...");
+		File jasperFile = new File("input/employees_csv.jasper");
+		if (jasperFile.exists()) {
+			jasperFile.delete();
+		}
+		System.out.println("Compile report...");
 		jre.setJrxmlFile("input/employees_csv.jrxml");
 		jre.compileReport();
 		jre.checkInputParameters();
@@ -24,18 +30,19 @@ public class TestJasperReportExecuter {
 		String rowSeparator = "\n";
 		String fieldDelimiter = ",";
 		String fieldList = "ID,FirstName,LastName,Position"; // must be delimited by the fieldDelimiter
+		System.out.println("Set input file...");
 		jre.setCsvDataSource(sourceFile, charset, datePattern, numberPattern, rowSeparator, fieldDelimiter, false, fieldList);
 		jre.setOutputFormat("PDF");
 		jre.setOutputDir("output/");
 		jre.setOutputFileNameWithoutExt("employees_csv");
 		jre.setFileTimestampPattern("yyyyMMdd_HHmmss");
 		jre.setPdfVersion("4");
-		System.out.println("Fill...");
+		System.out.println("Fill report...");
 		jre.fillReport();
-		System.out.println("Export...");
+		System.out.println("Export report...");
 		jre.exportReport();
-		System.out.println("Check compare...");
-		String outputFilePathExcepted = new File("output/employees_csv_expected.pdf").getAbsolutePath();
+		System.out.println("Check compare pdf files...");
+		String outputFilePathExcepted = new File("input/employees_csv_expected.pdf").getAbsolutePath();
 		String outputFilePathActual = jre.getOutputFile();
 		String textExpected = getTextFromPDF(outputFilePathExcepted);
 		String textActual = getTextFromPDF(outputFilePathActual);
