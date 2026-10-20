@@ -330,7 +330,10 @@ public class JasperReportExecuter {
 		}
 	}
 
-	private void setupOutputFile(String extension) {
+	private void setupOutputFile(String extension) throws Exception {
+		if (outputFileNameWithoutExt == null) {
+			throw new Exception("Option outputFileWithoutExt not set");
+		}
 		if (fileTimestampSDF != null) {
 			outputFileNameWithoutExt = outputFileNameWithoutExt + "_"
 					+ fileTimestampSDF.format(new Date());
@@ -340,6 +343,9 @@ public class JasperReportExecuter {
 		} else {
 			outputFile = outputDir + "/" + outputFileNameWithoutExt + "."
 					+ extension;
+		}
+		if (createDirIfNecessary) {
+			Util.ensureParentExists(new File(outputFile));
 		}
 	}
 
@@ -715,7 +721,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 
-	private JRAbstractExporter<?, ?, ?, ?> createXlsExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createXlsExporter() throws Exception {
 		setupOutputFile("xls");
 		JRXlsExporter exporter = new JRXlsExporter();
 		SimpleXlsExporterConfiguration exportConfiguration = new SimpleXlsExporterConfiguration();
@@ -733,7 +739,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 
-	private JRAbstractExporter<?, ?, ?, ?> createXlsxExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createXlsxExporter() throws Exception {
 		setupOutputFile("xlsx");
 		JRXlsxExporter exporter = new JRXlsxExporter();
 		SimpleXlsxExporterConfiguration exportConfiguration = new SimpleXlsxExporterConfiguration();
@@ -751,7 +757,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 	
-	private JRAbstractExporter<?, ?, ?, ?> createHtmlExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createHtmlExporter() throws Exception {
 		setupOutputFile("html");
 		HtmlExporter exporter = new HtmlExporter();
 		SimpleHtmlExporterConfiguration exportConfiguration = new SimpleHtmlExporterConfiguration();
@@ -763,7 +769,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 
-	private JRAbstractExporter<?, ?, ?, ?> createCsvExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createCsvExporter() throws Exception {
 		setupOutputFile("csv");
 		JRCsvExporter exporter = new JRCsvExporter();
 		SimpleCsvExporterConfiguration exportConfiguration = new SimpleCsvExporterConfiguration();
@@ -779,7 +785,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 
-	private JRAbstractExporter<?, ?, ?, ?> createTxtExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createTxtExporter() throws Exception {
 		setupOutputFile("txt");
 		JRTextExporter exporter = new JRTextExporter();
 		SimpleTextExporterConfiguration exportConfiguration = new SimpleTextExporterConfiguration();
@@ -793,7 +799,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 	
-	private JRAbstractExporter<?, ?, ?, ?> createPptxExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createPptxExporter() throws Exception {
 		setupOutputFile("pptx");
 		JRPptxExporter exporter = new JRPptxExporter();
 		SimplePptxExporterConfiguration exportConfiguration = new SimplePptxExporterConfiguration();
@@ -805,7 +811,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 	
-	private JRAbstractExporter<?, ?, ?, ?> createOdsExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createOdsExporter() throws Exception {
 		setupOutputFile("ods");
 		JROdsExporter exporter = new JROdsExporter();
 		SimpleOdsExporterConfiguration exportConfiguration = new SimpleOdsExporterConfiguration();
@@ -822,7 +828,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 	
-	private JRAbstractExporter<?, ?, ?, ?> createOdtExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createOdtExporter() throws Exception {
 		setupOutputFile("odt");
 		JROdtExporter exporter = new JROdtExporter();
 		SimpleOdtExporterConfiguration exportConfiguration = new SimpleOdtExporterConfiguration();
@@ -834,7 +840,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 
-	private JRAbstractExporter<?, ?, ?, ?> createRtfExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createRtfExporter() throws Exception {
 		setupOutputFile("rtf");
 		JRRtfExporter exporter = new JRRtfExporter();
 		SimpleRtfExporterConfiguration exportConfiguration = new SimpleRtfExporterConfiguration();
@@ -846,7 +852,7 @@ public class JasperReportExecuter {
 		return exporter;
 	}
 
-	private JRAbstractExporter<?, ?, ?, ?> createDocxExporter() {
+	private JRAbstractExporter<?, ?, ?, ?> createDocxExporter() throws Exception {
 		setupOutputFile("docx");
 		JRDocxExporter exporter = new JRDocxExporter();
 		SimpleDocxExporterConfiguration exportConfiguration = new SimpleDocxExporterConfiguration();
@@ -865,9 +871,6 @@ public class JasperReportExecuter {
 	 * @throws Exception
 	 */
 	public void exportReport() throws Exception {
-		if (outputFileNameWithoutExt == null) {
-			throw new Exception("Option outputFileWithoutExt not set");
-		}
 		JRAbstractExporter<?, ?, ?, ?> exporter;
 		if ("PDF".equalsIgnoreCase(outputFormat)) {
 			exporter = createPdfExporter();
@@ -899,9 +902,6 @@ public class JasperReportExecuter {
 		if (overwriteFiles == false && new File(outputFile).exists()) {
 			throw new Exception("Output file " + outputFile
 					+ " already exists!");
-		}
-		if (createDirIfNecessary) {
-			Util.ensureParentExists(new File(outputFile));
 		}
 		exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 		exporter.exportReport();
