@@ -1183,7 +1183,7 @@ public class JasperReportExecuter {
 		if (numberPattern == null || numberPattern.trim().isEmpty()) {
 			numberPattern = "##0.###";
 		}
-		if (fieldDelimiter == null || fieldDelimiter.trim().isEmpty()) {
+		if (fieldDelimiter == null || fieldDelimiter.isEmpty()) { // do not trim because a TAB would also be trimmed
 			fieldDelimiter = ";";
 		}
 		if (rowSeparator == null || rowSeparator.isBlank()) {
