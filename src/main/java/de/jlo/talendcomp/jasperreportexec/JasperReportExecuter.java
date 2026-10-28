@@ -453,9 +453,7 @@ public class JasperReportExecuter {
 				compiledJasperReport = reportMap.get(jrxmlFilePath);
 				if (compiledJasperReport == null) {
 					compiledJasperReport = (JasperReport) JRLoader.loadObjectFromFile(jasperFile);
-					if (useDesignCaching) {
-						reportMap.put(jrxmlFilePath, compiledJasperReport);
-					}
+					reportMap.put(jrxmlFilePath, compiledJasperReport);
 				}
 			}
 		}
