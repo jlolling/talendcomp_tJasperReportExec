@@ -179,6 +179,9 @@ public class JasperReportExecuter {
 	}
 
 	public void setOutputDir(String outputDir) {
+		if (outputDir == null || outputDir.isBlank()) {
+			throw new IllegalArgumentException("Parameter outputDir cannot be null or empty");
+		}
 		this.outputDir = outputDir;
 	}
 
@@ -187,6 +190,9 @@ public class JasperReportExecuter {
 	}
 
 	public void setOutputFormat(String outputFormat) {
+		if (outputFormat == null || outputFormat.isBlank()) {
+			throw new IllegalArgumentException("Parameter outputFormat cannot be null or empty");
+		}
 		this.outputFormat = outputFormat;
 	}
 
@@ -207,8 +213,11 @@ public class JasperReportExecuter {
 	}
 
 	public void setJrxmlFile(String file) {
-		if (file != null) {
+		if (file != null && file.isBlank() == false) {
 			mainJrxmlFile = new File(file);
+			if (mainJrxmlFile.exists() == false) {
+				throw new IllegalArgumentException("jrxml file: " + mainJrxmlFile.getAbsolutePath() + " does not exists or cannot be read");
+			}
 		} else {
 			throw new IllegalArgumentException("jrxml file is needed!");
 		}
@@ -331,6 +340,9 @@ public class JasperReportExecuter {
 	}
 
 	private void setupOutputFile(String extension) throws Exception {
+		if (extension == null || extension.isBlank()) {
+			throw new IllegalArgumentException("File extension cannot be null or empty");
+		}
 		if (outputFileNameWithoutExt == null) {
 			throw new Exception("Option outputFileWithoutExt not set");
 		}
@@ -919,7 +931,9 @@ public class JasperReportExecuter {
 	 * @param value
 	 */
 	public void setParameterValue(String parameterName, Object value) {
-		parameterMap.put(parameterName, value);
+		if (parameterName != null) {
+			parameterMap.put(parameterName, value);
+		}
 	}
 
 	/**
@@ -1158,7 +1172,7 @@ public class JasperReportExecuter {
 	 */
 	public void setCsvDataSource(String filePath, String charset, String datePattern, String numberPattern, String rowSeparator, String fieldDelimiter, boolean firstRowIsHeader, String fieldList) throws Exception {
 		if (firstRowIsHeader && (fieldList == null || fieldList.trim().isEmpty())) {
-			throw new Exception("Column detection by header or is off. Now the CSV field list cannot be null or empty!");
+			throw new Exception("Column detection by header is enabled but the given field list is null or empty!");
 		}
 		if (charset == null) {
 			charset = "UTF-8";
@@ -1171,6 +1185,9 @@ public class JasperReportExecuter {
 		}
 		if (fieldDelimiter == null || fieldDelimiter.trim().isEmpty()) {
 			fieldDelimiter = ";";
+		}
+		if (rowSeparator == null || rowSeparator.isBlank()) {
+			rowSeparator = "\n";
 		}
 		File file = new File(filePath);
 		if (file.canRead() == false) {
@@ -1200,6 +1217,9 @@ public class JasperReportExecuter {
 	 * @throws Exception
 	 */
 	public void setXmlDataSource(String filePath, String selectExpression, String datePattern, String numberPattern) throws Exception {
+		if (filePath == null || filePath.isBlank()) {
+			throw new IllegalArgumentException("Parameter for XML file path cannot be null or empty");
+		}
 		File file = new File(filePath);
 		if (file.canRead() == false) {
 			throw new Exception("XML File:" + file.getAbsolutePath() + " cannot be read or does not exist.");

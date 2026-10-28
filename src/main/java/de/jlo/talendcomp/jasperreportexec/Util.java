@@ -34,6 +34,15 @@ public class Util {
 	 */
 	public static java.util.List<Object> convertToList(String valuesSeparated, String dataType, String delimiter, String pattern) throws Exception {
 		java.util.List<Object> resultList = new java.util.ArrayList<Object>();
+		if (valuesSeparated == null || valuesSeparated.isBlank()) {
+			throw new IllegalArgumentException("List of values cannot be null or empty");
+		}
+		if (dataType == null || dataType.isBlank()) {
+			throw new IllegalArgumentException("Data type be null or empty");
+		}
+		if (delimiter == null || delimiter.isBlank()) {
+			throw new IllegalArgumentException("List delimiter be null or empty");
+		}
 		java.util.StringTokenizer st = new java.util.StringTokenizer(valuesSeparated, delimiter);
 		while (st.hasMoreElements()) {
 			String value = st.nextToken();

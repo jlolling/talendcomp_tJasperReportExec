@@ -13,6 +13,9 @@
 	String dataSource = ElementParameterParser.getValue(node, "__DATASOURCE__");
 	String connection = ElementParameterParser.getValue(node, "__CONNECTION__");
 	String xmlFile = ElementParameterParser.getValue(node, "__XML_DS_FILE__");
+	if (xmlFile == null || xmlFile.isEmpty()) {
+		xmlFile = "null";
+	}
 	boolean xmlUseSelectExprFromReport = "true".equals(ElementParameterParser.getValue(node, "__XML_USE_SELECT_EXPR_FROM_REPORT__"));
 	String xmlSelect = ElementParameterParser.getValue(node, "__XML_SELECT_EXPR__");
 	if (xmlSelect == null || xmlSelect.isEmpty() || xmlUseSelectExprFromReport) {
@@ -27,6 +30,9 @@
 		xmlNumberPattern = "null";
 	}
 	String csvFile = ElementParameterParser.getValue(node, "__CSV_DS_FILE__");
+	if (csvFile == null || csvFile.isEmpty()) {
+		csvFile = "null";
+	}
 	String csvCharset = ElementParameterParser.getValue(node, "__CSV_CHARSET__");
 	if (csvCharset == null || csvCharset.isEmpty()) {
 		csvCharset = "null";
@@ -53,8 +59,14 @@
 		csvColumNames = "null";
 	}
 	String jrxmlFile = ElementParameterParser.getValue(node, "__JRXML_FILE__");
-	String useJavaCompiler = ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__");
+	if (jrxmlFile == null || jrxmlFile.isEmpty()) {
+		jrxmlFile = "null";
+	}
+	boolean useJavaCompiler = "true".equals(ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__"));
 	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
+	if (numberDummyRecords == null || numberDummyRecords.isBlank()) {
+		numberDummyRecords = "0";
+	}
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
 	boolean onlyCompile = "true".equals(ElementParameterParser.getValue(node, "__ONLY_COMPILE__"));
 	boolean useDesignCaching = "true".equals(ElementParameterParser.getValue(node, "__USE_CACHING__"));
@@ -68,8 +80,8 @@
 		<%=cid%>.setJrxmlFile(<%=jrxmlFile%>);
 	} catch (Exception e) {
 		String message = "Setup report design failed: " + e.getMessage();
-	   globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
-	   <%=cid%>_ok = false;
+	    globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
+	    <%=cid%>_ok = false;
 		globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
 <%	if (dieOnError) { %>
 		throw e;
@@ -91,35 +103,35 @@
 <%	if (onlyCompile == false) { %>
 	if (<%=cid%>_ok) {
 	    try {
-<%		if ("DB_CONNECTION".equals(dataSource)) { %>
-    		<%=cid%>.setConnection((java.sql.Connection) globalMap.get("conn_" + "<%=connection%>"));
-<%		} else if ("XML_FILE".equals(dataSource)) { %>
-			<%=cid%>.setXmlDataSource(
-				<%=xmlFile%>, 
-				<%=xmlSelect%>, 
-				<%=xmlDatePattern%>, 
-				<%=xmlNumberPattern%>);
-<%		} else if ("CSV_FILE".equals(dataSource)) { %>
-			<%=cid%>.setCsvDataSource(
-				<%=csvFile%>, 
-				<%=csvCharset%>, 
-				<%=csvDatePattern%>, 
-				<%=csvNumberPattern%>, 
-				<%=csvRowSeparator%>, 
-				<%=csvColSeparator%>, 
-				<%=csvUseHeaderLine%>, 
-				<%=csvColumNames%>);
-<%		} else if ("DUMMY_DS".equals(dataSource)) { %>
-			<%=cid%>.setDummyDataSource(<%=numberDummyRecords%>);
-<%		} %>	
+<%			if ("DB_CONNECTION".equals(dataSource)) { %>
+    			<%=cid%>.setConnection((java.sql.Connection) globalMap.get("conn_" + "<%=connection%>"));
+<%			} else if ("XML_FILE".equals(dataSource)) { %>
+				<%=cid%>.setXmlDataSource(
+					<%=xmlFile%>, 
+					<%=xmlSelect%>, 
+					<%=xmlDatePattern%>, 
+					<%=xmlNumberPattern%>);
+<%			} else if ("CSV_FILE".equals(dataSource)) { %>
+				<%=cid%>.setCsvDataSource(
+					<%=csvFile%>, 
+					<%=csvCharset%>, 
+					<%=csvDatePattern%>, 
+					<%=csvNumberPattern%>, 
+					<%=csvRowSeparator%>, 
+					<%=csvColSeparator%>, 
+					<%=csvUseHeaderLine%>, 
+					<%=csvColumNames%>);
+<%			} else if ("DUMMY_DS".equals(dataSource)) { %>
+				<%=cid%>.setDummyDataSource(<%=numberDummyRecords%>);
+<%			} %>	
     	} catch (Exception e) {
 			String message = "Setup datasoure report failed: " + e.getMessage();
 	    	globalMap.put("<%=cid%>_ERROR_MESSAGE", message); 
 	    	<%=cid%>_ok = false;
 			globalMap.put("<%=cid%>_REPORT_FINISHED_SUCCESSFULLY", <%=cid%>_ok);
-<%		if (dieOnError) { %>
-			throw e;
-<%		} %>
+<%			if (dieOnError) { %>
+				throw e;
+<%			} %>
     	}
    }
 <%	} // if (onlyCompile == false) %>
