@@ -334,14 +334,15 @@ public class JasperReportExecuter {
 		if (outputFileNameWithoutExt == null) {
 			throw new Exception("Option outputFileWithoutExt not set");
 		}
+		String finalOutputFileNameWithoutExt = outputFileNameWithoutExt;
 		if (fileTimestampSDF != null) {
-			outputFileNameWithoutExt = outputFileNameWithoutExt + "_"
+			finalOutputFileNameWithoutExt = outputFileNameWithoutExt + "_"
 					+ fileTimestampSDF.format(new Date());
 		}
 		if (outputDir.endsWith("/")) {
-			outputFile = outputDir + outputFileNameWithoutExt + "." + extension;
+			outputFile = outputDir + finalOutputFileNameWithoutExt + "." + extension;
 		} else {
-			outputFile = outputDir + "/" + outputFileNameWithoutExt + "."
+			outputFile = outputDir + "/" + finalOutputFileNameWithoutExt + "."
 					+ extension;
 		}
 		if (createDirIfNecessary) {
@@ -391,24 +392,30 @@ public class JasperReportExecuter {
 			jasperDesign = designMap.get(jrxmlFile.getAbsolutePath());
 			if (jasperDesign == null) {
 				if (replaceJrxmlRef) {
-					String jrxmlContent = IOUtils.toString(new FileInputStream(jrxmlFile), "UTF-8");
-					if (jrxmlContent.contains(".jrxml")) {
-						// jrxml reference detected
-						jrxmlContent = jrxmlContent.replace(".jrxml", ".jasper");
-						jrxmlFile.renameTo(new File(jrxmlFile.getAbsolutePath()+".original"));
-						Writer out = new FileWriter(jrxmlFile.getAbsolutePath());
-						IOUtils.write(jrxmlContent.getBytes(), out, "UTF-8");
-						out.flush();
-						out.close();
+					try (FileInputStream jrxmlFileInputStream = new FileInputStream(jrxmlFile)) {
+						String jrxmlContent = IOUtils.toString(jrxmlFileInputStream, "UTF-8");
+						if (jrxmlContent.contains(".jrxml")) {
+							// jrxml reference detected
+							jrxmlContent = jrxmlContent.replace(".jrxml", ".jasper");
+							jrxmlFile.renameTo(new File(jrxmlFile.getAbsolutePath()+".original"));
+							Writer out = new FileWriter(jrxmlFile.getAbsolutePath());
+							try {
+								IOUtils.write(jrxmlContent.getBytes(), out, "UTF-8");
+							} finally {
+								out.flush();
+								out.close();
+							}
+						}
 					}
 				}
-				FileInputStream fis = new FileInputStream(jrxmlFile);
-				jasperDesign = loader.loadXML(fis);
-				if (fixLanguage) {
-					jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA);
-				}
-				if (useDesignCaching) {
-					designMap.put(jrxmlFile.getAbsolutePath(), jasperDesign);
+				try (FileInputStream fis = new FileInputStream(jrxmlFile)) {
+					jasperDesign = loader.loadXML(fis);
+					if (fixLanguage) {
+						jasperDesign.setLanguage(JasperReport.LANGUAGE_JAVA);
+					}
+					if (useDesignCaching) {
+						designMap.put(jrxmlFile.getAbsolutePath(), jasperDesign);
+					}
 				}
 			}
 		}
@@ -952,7 +959,7 @@ public class JasperReportExecuter {
 	 */
 	public void setOutputLocale(String locale) {
 		if (locale != null && locale.isEmpty() == false) {
-			parameterMap.put("REPORT_LOCALE", Locale.of(locale));
+			parameterMap.put("REPORT_LOCALE", Locale.forLanguageTag(locale.replace('_', '-')));
 		}
 	}
 
@@ -1173,6 +1180,7 @@ public class JasperReportExecuter {
 		csvDs.setDatePattern(datePattern);
 		csvDs.setFieldDelimiter(fieldDelimiter.charAt(0));
 		csvDs.setNumberPattern(numberPattern);
+		csvDs.setRecordDelimiter(rowSeparator);
 		if (firstRowIsHeader) {
 			csvDs.setUseFirstRowAsHeader(firstRowIsHeader);
 		} else {
