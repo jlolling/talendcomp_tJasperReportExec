@@ -64,7 +64,7 @@
 	}
 	boolean useJavaCompiler = "true".equals(ElementParameterParser.getValue(node, "__USE_JAVA_AS_LANG__"));
 	String numberDummyRecords = ElementParameterParser.getValue(node, "__DUMMY_DS_NUMBER_RECORDS__");
-	if (numberDummyRecords == null || numberDummyRecords.isBlank()) {
+	if (numberDummyRecords == null || numberDummyRecords.isEmpty()) {
 		numberDummyRecords = "0";
 	}
 	boolean dieOnError = "true".equals(ElementParameterParser.getValue(node, "__DIE_ON_ERROR__"));
