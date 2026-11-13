@@ -8,7 +8,7 @@
     <FAMILY>Business_Intelligence/Jasper</FAMILY> 
   </FAMILIES>  
   <DOCUMENTATION> 
-    <URL/> 
+    <URL>https://github.com/jlolling/talendcomp_tJasperReportExec</URL> 
   </DOCUMENTATION>  
   <CONNECTORS> 
     <CONNECTOR CTYPE="ITERATE" MAX_OUTPUT="0" MAX_INPUT="1"/>  
